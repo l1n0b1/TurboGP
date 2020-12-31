@@ -40,7 +40,7 @@ You can clone the repo and run one of the included [notebooks](TGP\01. Simple re
 
 * **Lino Rodriguez-Coayahuitl** - [l1n0b1](https://github.com/l1n0b1)
 
-See also the list of [contributors](https://github.com/l1n0b1/TurboGP/AUTHORS) who participated in this project.
+See also the list of [contributors](AUTHORS) who participated in this project.
 
 ## License
 
