@@ -34,7 +34,7 @@ Required libraries (most of these ship by default in recent conda distributions)
 
 ### Installing
 
-You can clone the repo and run one of the included [notebooks]("TGP\01. Simple regression example.ipynb") to verify that the library works properly in your system. 
+You can clone the repo and run one of the included [notebooks]("https://github.com/l1n0b1/TurboGP/blob/main/TGP/02.%20Simple%20regression%20example%20-%20with%20Online%20learning.ipynb") to verify that the library works properly in your system. 
 
 ## Authors
 
