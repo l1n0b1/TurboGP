@@ -13,7 +13,7 @@ TurboGP is a Python implementation of the Genetic Programming (GP) framework [1]
 Besides the features mentioned above, TurboGP also implements different crossover operations (_protected_ crossover variants), it allows to graphically display the individuals/models generated, and allows live plotting of the fitness and diversity evolution.
 
 <p align="center">
-  <img src="preview.png" alt="preview"/>
+  <img src="Preview.png" alt="preview"/>
 </p>
 
 ## Getting Started
