@@ -59,7 +59,7 @@ def evaluate_fitness_in_parallel(individual, batch, labels):
 
 
 
-def Steady_State(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online):
+def Steady_State(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online, pro=None):
     '''This is the Steady State flavour of a GP evolutionary cycle. It receives as input a
     population (must be already evaluated), a training set (batch and labels), the size of
     the parents/offspring pool (l_rate), a list indicating the genetic operations to be used
@@ -262,7 +262,7 @@ def Steady_StateMP(Population, batch, labels, test_batch, test_labels, l_rate, o
     return New_Pop, diversity, best_fit, test_fit
 
 
-def Cellular(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online, neighborhood='von Neumann', beta=-1, r_policy='1to1SteadyState'):
+def Cellular(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online, pro=None, neighborhood='von Neumann', beta=-1, r_policy='1to1SteadyState'):
     '''This is a spatially distributed population, a cellular arragement, in grid-toroidal form. In this model
     individuals reside in individual cells, and can only mate with their neighbors. This model can work either as as
     steady state or generational replacement dynamic (r_policy). In 1to11to1SteadyState (default) a single offspring
@@ -878,7 +878,7 @@ def Cellular_preEvalation(Population, batch, labels, test_batch, test_labels, l_
 
     return New_Pop, diversity, best_fit, test_fit
 
-def RHC(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online, v_policy='random'):
+def RHC(Population, batch, labels, test_batch, test_labels, l_rate, oper, oper_prob, oper_arity, minimization, sel_mechanism, online, pro=None, v_policy='random'):
     ''' "Recombinative Hill Climbing" implementation (population based, non-evolutionary) model.
     Based on the work of Hooper, Dale C., Flann Nicholas S., & Stephanie R. Fuller.'''
 

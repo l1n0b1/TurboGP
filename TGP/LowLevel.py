@@ -22,83 +22,83 @@
 
 
 import math
-from numba import jit
+#from numba import jit
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def ADD(a1, a2):
     return a1 + a2
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def SUB(a1, a2):
     return a1 - a2
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def MUL(a1, a2):
     return a1 * a2
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def DIV(a1, a2):
     if a2 != 0:
         return a1 / a2
     else:
         return 0
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def SIN(a1):
     result = math.sin(a1)
     return result
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def COS(a1):
     result = math.cos(a1)
     return result
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def SQRT(a1):
     result = math.sqrt(math.fabs(a1))
     return result
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def X2(a1):
     return a1 ** 2
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def X3(a1):
     return a1 ** 3
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def MAX(a1, a2):
     return max(a1, a2)
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def MEAN(a1, a2):
     return (a1 + a2)/2.0
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def MIN(a1, a2):
     return min(a1, a2)
 
 # New ANN activation functions-alike operations
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def RELU(a1):
     result = max(0,a1)
     return result
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def SIGM(a1):
     return 1 / (1 + math.e ** -a1)
 
 # RARE
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def IFTE(a1, a2, a3):
     if a1 > 0:
         return a2
     else:
         return a3
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def POW(a1, a2):
     return math.pow(math.fabs(a1),a2)

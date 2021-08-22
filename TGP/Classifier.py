@@ -1,25 +1,12 @@
 #-----------------------------------------------------------------------------------#
 # This file implements a GP-individual based on a single tree and designed to carry #
-# scalar regression. It can be considered the most basic example of GP-individuals  #
-# in the TurboGP library. It is pretty straighforward in its implementation: a tree #
-# that receives as input a n-size vector and outputs a single real number, that is, #
-# the prediction.                                                                   #
-#
-# This python class exemplifies how individuals must incorporate their own genetic  #
-# operations (crossover, mutation, etc.) methods that encapsulate the methods found #
-# in the GPOperators.py file, as well as provide protections in the case of cross-  #
-# over (such as grammatical validity ensurance, and max tree depth protection).     #
-#
-# The basic steps that a script must perform in order to evolve a regressor with    #
-# TurboGP library, is to create a bunch of individuals of the class herein defined  #
-# (the population) and pass them through one of the population dynamics implemented #
-# in GPflavors.py file, for the desired number of generations or epochs (as well as #
-# providing a dataset, of course).                                                  #
-#
-# For a complete guide on the usage of this GPIndividual class, and the TurboGP     #
-# library as a whole, refer to the jupyter notebooks provided as examples, as well  #
-# as to the GPSimpleReg.py script, also shipped along the rest of the files of the  #
-# library.                                                                          #
+# binary classification tasks. Along the regressor, it can be considered the most   #
+# basic example of GP-individuals in the TurboGP library. It is very similar to the #
+# regressor individual, with the main change being how the individual is evaluared; #
+# rather than using the MSE or some other distance metric as fitness function, this #
+# individual uses classification metrics as objetive functions; a couple of metrics #
+# are already defined and ready to be used, accuracy and F1 score, while others can #
+# be easily added.                                                                  #
 #
 # This file is part of TurboGP, a Python library for Genetic Programming (Koza,1992)#
 # by Rodriguez-Coayahuitl, Morales-Reyes, HJ Escalante. 2020.                       #
@@ -36,16 +23,17 @@ import numpy as np
 import random
 
 
-class SimpleRegresor:
-    ''' This class implements a GPtree based regressor. In consists of a tree object (as defined in GPIndividual.py),
+class BinaryClassifier:
+    ''' This class implements a GPtree based binary classifier. In consists of a tree object (as defined in GPIndividual.py),
     a fitness value, functions that allow to perform a prediction (predict), evaluate the performance of the individual
     against a single sample and its label (case_fitness), evaluate the performance of the individual against a bunch
     of labeled samples (fitness), and methods that implement genetic operations applicable to this type of individual.'''
 
-    def __init__(self, input_vector_size, complexity, grow_method='variable'):
-        '''This is the constructor method for the SimpleRegresor class. In order to create and initialize an individual
+    def __init__(self, input_vector_size, complexity, metric='accuracy', grow_method='variable'):
+        '''This is the constructor method for the BinaryClassifier class. In order to create and initialize an individual
         of this class, you have to define the size of the input vectors (input_vector_size), the max tree depth allowed
-        (complexity), and the grow method.'''
+        (complexity), the classification metric used evaluate and guide the evolution of instances of this class, and the
+        grow method.'''
 
         # the feature variables input set (i1) consist of a collection of integers.
         input_set = np.arange(input_vector_size)
@@ -67,66 +55,122 @@ class SimpleRegresor:
             # grow it
             self.tree.grow_random_tree()
 
-        # SimpleRegresor uses MSE as error measure. Finding an acceptable or optimal SimpleRegresor is a minimization
-        # problem; thefore, fitness value is initialized to inf.
-        self.fitness_value = float('Inf')
+        # BinaryClassifier may use different classification metrics in order to guide the evolutionary process. As such,
+        # it depends on the metric used on whether individuals' fitness will be initialized to Inf (minimization) or
+        # 0 (maximization).
+        self.metric = metric
+        if self.metric in ['accuracy', 'f1_score']:
+            # maximization metrics
+            self.fitness_value = 0.0
+        else:
+            # e.g., log loss/binary crossentropy
+            self.fitness_value = float('Inf')
 
     def predict(self, instance):
         '''This function applies the individual to a sample (instance) in order to perform a prediction. '''
 
-        result = self.tree.evaluate(instance)
+        output = self.tree.evaluate(instance)
+
+        # thresholding
+        if output > 0:
+            result = 1
+        else:
+            result = 0
 
         return result
 
     def case_fitness(self, instance, label):
         ''' Test performance of the individual against a single instance.'''
 
-        output = self.predict(instance)
+        prediction = self.predict(instance)
 
-        # Return quadratic error.
-        result = ((label - output) ** 2)
+        # if correct, return 1, otherwise, return 0
+        if prediction == label:
+            result = 1
+        else:
+            result = 0
 
         return result
 
     def fitness(self, samples_matrix, labels_matrix):
-        ''' This function calculates the actual fitness of the individual, for a given dataset. SimpleRegresor uses the
-        MSE as error measure, so the fitness value is calculated by averaging the case fitnesses obtained across all
-        samples of the provided dataset.'''
+        ''' This function calculates the actual fitness of the individual, for a given dataset. BinaryClassifier may use
+        different metrics as objective function; here to cases of guiding metrics are already defined: accuracy, and
+        f1 score.'''
 
         batch_size = len(samples_matrix)
 
-        case_fitnesses = []
+        true_values = labels_matrix
 
+        predictions = []
         for i in range(batch_size):
-            case_fitnesses.append(self.case_fitness(samples_matrix[i], labels_matrix[i]))
+            predictions.append(self.predict(samples_matrix[i]))
 
-        self.fitness_value = np.asarray(case_fitnesses).mean()
+        predictions = np.array(predictions)
+
+
+        if self.metric == 'accuracy':
+            accuracy = (true_values == predictions).sum() / batch_size
+            self.fitness_value = accuracy
+        elif self.metric == 'f1_score':
+            TP = ((predictions == 1) & (true_values == 1)).sum()
+            FP = ((predictions == 1) & (true_values == 0)).sum()
+            FN = ((predictions == 0) & (true_values == 1)).sum()
+            f1 = TP / (TP + (.5 * (FP + FN)))
+            self.fitness_value = f1
+        else:
+            self.fitness_value = 0.0
 
         return self.fitness_value
 
-    def score(self, samples_matrix, labels_matrix):
+    def score(self, samples_matrix, labels_matrix, metric='accuracy'):
         ''' Score functions in TurboGP individuals are designed to test the performance of an individual against a set
         of samples _without_ modifying its fitness value; i.e., this functions can be used in testing and validation
-        scenarios. In the case of the SimpleRegresor, this function is the exact same as the fitness evaluation funciton,
-        but it could be modified in order to calculate R^2, in a sci-kit learn fashion; see also BinaryClassifier class,
-        for an example of a score function that implements extra metrics over the vanilla fitness method.'''
+        scenarios. It can also be the case that here are defined perfomance metrics that are unsuited to guide evolution;
+        for example, in the case of binary classification, both precision and recall are very important and informative
+        performance measure, but they cannot be used to guide an evolutionary optimization process, and both are more
+        akin to used as post-training evaluation methods.'''
 
         batch_size = len(samples_matrix)
 
-        case_fitnesses = []
+        true_values = labels_matrix
 
+        predictions = []
         for i in range(batch_size):
-            case_fitnesses.append(self.case_fitness(samples_matrix[i], labels_matrix[i]))
+            predictions.append(self.predict(samples_matrix[i]))
 
-        testing_fitness = np.asarray(case_fitnesses).mean()
+        predictions = np.array(predictions)
+
+
+        if metric == 'accuracy':
+            accuracy = (true_values == predictions).sum() / batch_size
+            testing_fitness = accuracy
+        elif metric == 'f1_score':
+            TP = ((predictions == 1) & (true_values == 1)).sum()
+            FP = ((predictions == 1) & (true_values == 0)).sum()
+            FN = ((predictions == 0) & (true_values == 1)).sum()
+            f1 = TP / (TP + (.5 * (FP + FN)))
+            testing_fitness = f1
+        elif metric == 'precision':
+            TP = ((predictions == 1) & (true_values == 1)).sum()
+            FP = ((predictions == 1) & (true_values == 0)).sum()
+            precision = TP / (TP + FP)
+            testing_fitness = precision
+        elif metric == 'recall':
+            TP = ((predictions == 1) & (true_values == 1)).sum()
+            FN = ((predictions == 0) & (true_values == 1)).sum()
+            recall = TP / (TP + FN)
+            testing_fitness = recall
+        else:
+            testing_fitness = 0.0
 
         return testing_fitness
 
+
     @staticmethod
     def crossover(filter1, filter2):
-        ''' This is a static method of the SimpleRegressor class that defines standard subtree crossover operation for
+        ''' This is a static method of the BinaryClassifier class that defines standard subtree crossover operation for
         this type of GP individuals. It is basically a wrapper for subtree_crossover method found in GPOperators.py.
-        It receives as input two SimpleRegresor individuals and returns as output two new individuals. This version of
+        It receives as input two individuals and returns as output two new individuals. This version of
         crossover is not protected in any way, neither gramatically nor in max tree depth. It does nothing more than
         choosing random nodes in both trees as exchange points, and call subtree_crossover method on them. Therefore it
         should be used only when just low-level primitves are enabled (i.e. no mezzanine functions), and it may induce
@@ -180,7 +224,7 @@ class SimpleRegresor:
 
     @staticmethod
     def mutation(filter1):
-        ''' This is a static method of the SimpleRegressor class that defines subtree mutation operation for such kind
+        ''' This is a static method of the BinaryClassifier class that defines subtree mutation operation for such kind
         of individuals. It is basically a wrapper for subtree_mutation method defined in GPOperators.py. It receives as
         input one individual and return as output one new individual where one randomly picked subtree has been altered.
         Since subtree_mutation is protected in every sense (both max depth, and gramatically), this function can be used
@@ -199,7 +243,7 @@ class SimpleRegresor:
 
     @staticmethod
     def protected_crossover(filter1, filter2):
-        ''' This is a static method of the Simple Regressor class of individuals that defines a protected crossover type
+        ''' This is a static method of the BinaryClassifier class of individuals that defines a protected crossover type
         of operation. This type of crossover ensures that generated offspring trees do not exced the max allowed depth.
         To be able to perform such operation, it is required to perform a pseudo crossover actually: the genetic material
         (subtrees) are not actually swapped between trees, instead, the first child is generated by randomly picking a
@@ -279,7 +323,7 @@ class SimpleRegresor:
 
     @staticmethod
     def samedepths_crossover(filter1, filter2):
-        ''' This is a static method of the SimpleRegressor class of individuals that defines the SameDepths subtree
+        ''' This is a static method of the BinaryClassifier class of individuals that defines the SameDepths subtree
         crossover, promoted by Kim Harries & Peter Smith (1997). SameDepths crossover is a type of protected crossover.
         It works first by determining which of both parents is shallower and uses its depth as a range to pick at
         random a depth, then searches for nodes within such given depth and performs the subtree crossover.
@@ -330,7 +374,7 @@ class SimpleRegresor:
 
     @staticmethod
     def composition(filter1):
-        ''' This is a static method of the Simple Regressor class of individuals that defines the
+        ''' This is a static method of the BinaryClassifier class of individuals that defines the
         composition operation for such kind of individuals. It is basically a wrapper for compo-
         sition. It receives as input one individual, the hat function' max allowed depth and a
         grow method (optional), and return as output one new individual.'''

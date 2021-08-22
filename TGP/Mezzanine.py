@@ -22,29 +22,29 @@
 #-----------------------------------------------------------------------------------#
 
 import numpy as np
-from numba import jit
+#from numba import jit
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def mMEAN(a):
     return np.mean(a)
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def mSTD(a):
     return np.std(a)
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def mMAX(a):
     return np.amax(a)
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def mMIN(a):
     return np.amin(a)
 
 
-@jit(nopython=True)
+#@jit(nopython=True)
 def mMED(a):
     return np.median(a)

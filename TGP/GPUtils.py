@@ -65,7 +65,7 @@ def tournament(population, proportion, minimization=True, n=20):
         subset_pop = []
         for _ in range(n):
             subset_pop.append(random.choice(population))
-            
+
         selected.append(elite_selection(population=subset_pop, amount=1, minimization=minimization)[0])
 
 
@@ -252,7 +252,10 @@ def export(Population, amount, target, ID=None, minimization=True):
     Package = {'ID': ID,
                'Content': migrants}
 
-    pickle.dump(Package, open("Population-{}".format(target), "wb"), protocol=2)
+    if ID == 'Final':
+        pickle.dump(Package, open("Population-{}f".format(target), "wb"), protocol=2)
+    else:
+        pickle.dump(Package, open("Population-{}".format(target), "wb"), protocol=2)
 
     return ID
 
