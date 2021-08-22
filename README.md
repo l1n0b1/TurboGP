@@ -85,11 +85,19 @@ First commit. Features included:
 ## References
 
 [1] Koza, J. R., & Koza, J. R. (1992). Genetic programming: on the programming of computers by means of natural selection (Vol. 1). MIT press.
+
 [2] Rodriguez-Coayahuitl, L., Morales-Reyes, A., & Escalante, H. J. (2019). Evolving autoencoding structures through genetic programming. Genetic Programming and Evolvable Machines, 20(3), 413-440.
+
 [3] Petty, C. C. (1997). Diffusion (cellular) models. Handbook of evolutionary Computation.
+
 [4] Martin, W. N., Lienig, J., & Cohoon, J. P. (1997). C6. 3 Island (migration) models: evolutionary algorithms based on punctuated equilibria. B ack et al. BFM97], Seiten C, 6, 101-124.
+
 [5] Al-Sahaf, H., Song, A., Neshatian, K., & Zhang, M. (2012). Two-tier genetic programming: Towards raw pixel-based image classification. Expert Systems with Applications, 39(16), 12291-12301.
+
 [6] Evans, B., Al-Sahaf, H., Xue, B., & Zhang, M. (2018, July). Evolutionary deep learning: A genetic programming approach to image classification. In 2018 IEEE Congress on Evolutionary Computation (CEC) (pp. 1-6). IEEE.
+
 [7] Rodriguez-Coayahuitl, L., Morales-Reyes, A., & Escalante, H. J. (2019, November). A Comparison among Different Levels of Abstraction in Genetic Programming. In 2019 IEEE International Autumn Meeting on Power, Electronics and Computing (ROPEC) (pp. 1-6). IEEE.
+
 [8] Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
+
 [9] Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
