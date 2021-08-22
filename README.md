@@ -18,7 +18,7 @@ Besides the features mentioned above, TurboGP also implements different crossove
 
 ## Getting Started
 
-TurboGP ships with several jupyter notebooks that explain in detail how to use the library. The notebooks cover a simple regression example, under different scenarios (offline learning, online learning, parallel CPU usage), as well as an example on a multi-layered GP for image denoising. Other examples include binary classification for classic UCI repository datasets, examples on how to use TurboGP from the OS shell (CLI), among others. There is also a notebook that covers more in depth the inner workings of TurboGP (core classes and methods).
+TurboGP ships with several jupyter notebooks that explain in detail how to use the library. The notebooks cover a simple regression example, under different scenarios (offline learning, online learning, parallel CPU usage), as well as an example on a multi-layered GP for image denoising. Other examples include binary classification for classic UCI repository datasets [8], examples on how to use TurboGP from the OS shell (CLI), among others. There is also a notebook that covers more in depth the inner workings of TurboGP (core classes and methods).
 
 ### Prerequisites
 
@@ -59,9 +59,11 @@ This project is licensed under The GNU General Public License v3.0  - see the [L
 
 ### Version 1.2
 
+Second release. New features:
+
 - Crossover is now debiased.
 - Added BinaryClassifier evolvable individual class.
-- Added GeneticProgram class, that allows to instantiate and launch complete GP runs through a scikit-alike interface.
+- Added GeneticProgram class, that allows to instantiate and launch complete GP runs through a scikit[9]-alike interface.
 - Added CLI that allows to launch GP runs (settings are defined in JSON files, while datasets are read in pickled files).
 - Added GeneticProgramD class, aimed at deploying multi-population GP that can take advantage of multicore CPU systems.
 - Added examples that illustrate on all the new features (BinaryClassifier, scikitlearn-alike interface, CLI, etc.)
@@ -89,3 +91,5 @@ First commit. Features included:
 [5] Al-Sahaf, H., Song, A., Neshatian, K., & Zhang, M. (2012). Two-tier genetic programming: Towards raw pixel-based image classification. Expert Systems with Applications, 39(16), 12291-12301.
 [6] Evans, B., Al-Sahaf, H., Xue, B., & Zhang, M. (2018, July). Evolutionary deep learning: A genetic programming approach to image classification. In 2018 IEEE Congress on Evolutionary Computation (CEC) (pp. 1-6). IEEE.
 [7] Rodriguez-Coayahuitl, L., Morales-Reyes, A., & Escalante, H. J. (2019, November). A Comparison among Different Levels of Abstraction in Genetic Programming. In 2019 IEEE International Autumn Meeting on Power, Electronics and Computing (ROPEC) (pp. 1-6). IEEE.
+[8] Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
+[9] Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
