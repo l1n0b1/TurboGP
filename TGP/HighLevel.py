@@ -13,7 +13,7 @@
 #-----------------------------------------------------------------------------------#
 
 import numpy as np
-from scipy import ndimage
+#from scipy import ndimage
 #from skimage.measure import block_reduce
 
 def Conv(a1,a2):
