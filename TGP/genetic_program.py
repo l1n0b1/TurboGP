@@ -43,7 +43,7 @@ import subprocess
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_agraph import graphviz_layout
 from tqdm import tqdm
-from tqdm._utils import _term_move_up
+#from tqdm._utils import _term_move_up
 
 # TurboGP libraries
 from GPIndividuals import *
@@ -394,46 +394,22 @@ class GeneticProgramIE(GeneticProgram):
 
                     pbar.set_postfix({'Island': self.pop_num, 'Training Fitness': bf})
                     pbar.update(1)
-
+                    
+                    
+                    # When reach a generation valid for exporting
                     if i%self.every_gen == 0 and i != 0:
                         # Export best so far
-                        # Pick target for destination:
-                        if self.topology=='dynamic_random':
-                            dest = np.random.randint(self.no_populations)
-                            # Check not to send them to this population
-                            while dest == self.pop_num:
-                                dest = np.random.randint(self.no_populations)
-                        elif self.topology=='linear_ring':
-                            dest = self.pop_num + 1
-                            if dest == self.no_populations:
-                                dest = 0
-                        else:
-                            # send them to an unreachable island
-                            dest = self.no_populations
-                        # Send them
-                        ID_ex = export(self.Population, self.amount, dest, minimization=self.minimization)
-                        # Report
-                        #print("Exported to destiny: ", dest)
-                        #print("With Random ID: ", ID_ex)
+                        self.export_to()
                         # Enable import
                         import_enabled = True
 
-                    # Every Generation\
+                    # Check every Generation if conditions for import are met
                     if self.topology is not None:
                         if import_enabled is True:
-                            try:
-                                # Attempt import
-                                last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
-                            except EOFError:
-                                # avoid IO collision
-                                time.sleep(1)
-                                last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
-                            finally:
-                                # If succesfully imported, disable import until next valid generation for importing
-                                if last_ID is not False:
-                                    import_enabled = False
-                                    # Report
-                                    #print("Imported with ID: ", last_ID)
+                            # Attempt importing
+                            last_ID, import_enabled = self.try_import(last_ID)
+                    
+                    # Increment generation counter
                     i += 1
 
 
@@ -482,46 +458,19 @@ class GeneticProgramIE(GeneticProgram):
 
                 pbar.set_postfix({'Island': self.pop_num, 'Training Fitness': bf})
                 pbar.update(1)
-
+                
+                # When reach a generation valid for exporting
                 if i%self.every_gen == 0 and i != 0:
                     # Export best so far
-                    # Pick target for destination:
-                    if self.topology=='dynamic_random':
-                        dest = np.random.randint(self.no_populations)
-                        # Check not to send them to this population
-                        while dest == self.pop_num:
-                            dest = np.random.randint(self.no_populations)
-                    elif self.topology=='linear_ring':
-                        dest = self.pop_num + 1
-                        if dest == self.no_populations:
-                            dest = 0
-                    else:
-                        # send them to an unreachable island
-                        dest = self.no_populations
-                    # Send them
-                    ID_ex = export(self.Population, self.amount, dest, minimization=self.minimization)
-                    # Report
-                    #print("Exported to destiny: ", dest)
-                    #print("With Random ID: ", ID_ex)
+                    self.export_to()
                     # Enable import
                     import_enabled = True
 
-                # Every Generation
+                # Check every Generation if conditions for import are met
                 if self.topology is not None:
                     if import_enabled is True:
-                        try:
-                            # Attempt import
-                            last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
-                        except EOFError:
-                            # avoid IO collision
-                            time.sleep(1)
-                            last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
-                        finally:
-                            # If succesfully imported, disable import until next valid generation for importing
-                            if last_ID is not False:
-                                import_enabled = False
-                                # Report
-                                #print("Imported with ID: ", last_ID)
+                        # Attempt importing
+                        last_ID, import_enabled = self.try_import(last_ID)
 
 
             pbar.close()
@@ -536,6 +485,53 @@ class GeneticProgramIE(GeneticProgram):
         export(Population=self.Population, amount=1, target=self.pop_num, ID='Final', minimization=self.minimization)
 
         return self.model_
+    
+    
+    
+    def export_to(self):
+        
+        # Pick target for destination:
+        if self.topology=='dynamic_random':
+            dest = np.random.randint(self.no_populations)
+            # Check not to send them to this population
+            while dest == self.pop_num:
+                dest = np.random.randint(self.no_populations)
+        elif self.topology=='linear_ring':
+            dest = self.pop_num + 1
+            if dest == self.no_populations:
+                dest = 0
+        else:
+            # Unkown topology; export to an unreachable island
+            dest = self.no_populations
+            
+        # Send them if migration enabled (if topology is not None)
+        if self.topology is not None:
+            ID_ex = export(self.Population, self.amount, dest, minimization=self.minimization)
+            # Report
+            #print("Exported to destiny: ", dest)
+            #print("With Random ID: ", ID_ex)
+
+    
+    def try_import(self, last_ID):
+        
+        try:
+            # Attempt import
+            last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
+        except EOFError:
+            # avoid IO collision
+            time.sleep(1)
+            last_ID = import_and_replace(self.Population, self.pop_num, last_ID, minimization=self.minimization)
+        finally:
+            # If succesfully imported, disable import until next valid generation for importing
+            if last_ID is not False:
+                import_enabled = False
+                # Report
+                #print("Imported with ID: ", last_ID)
+            else:
+                import_enabled = True
+        
+        return last_ID, import_enabled
+            
 
 
 class GeneticProgramD(GeneticProgram):
@@ -619,11 +615,7 @@ class GeneticProgramD(GeneticProgram):
 
         # Optional parameters
 
-        if self.f2_set is None:
-            for i in range(self.no_populations):
-                self.params_all[i]['mezzanine'] = 'None'
-                self.params_all[i]['trimmers'] = 'None'
-        else:
+        if self.f2_set is not None:
             for i in range(self.no_populations):
                 self.params_all[i]['mezzanine'] = self.f2_set
                 self.params_all[i]['trimmers'] = self.i3_set
@@ -753,53 +745,61 @@ def main(file_name):
     # module = importlib.import_module('my_package.my_module')
     module = importlib.import_module(run_params['ind_module'])
     GP_class = getattr(module, run_params['ind_name'])
+    ind_params = run_params['ind_params']
 
     sel_mechanism = globals()[run_params['sel_mechanism']]
 
-    if run_params['mezzanine'] == 'None':
-        GeneticProgramIE.set_primitives(lowlevel=run_params['lowlevel'])
+    if 'mezzanine' in run_params:
+        if run_params['mezzanine'] is not None:
+            GeneticProgramIE.set_primitives(lowlevel=run_params['lowlevel'], mezzanine=run_params['mezzanine'],  trimmers=run_params['trimmers'])
+        else:
+            GeneticProgramIE.set_primitives(lowlevel=run_params['lowlevel'])
     else:
-        GeneticProgramIE.set_primitives(lowlevel=run_params['lowlevel'], mezzanine=run_params['mezzanine'],  trimmers=run_params['trimmers'])
+        GeneticProgramIE.set_primitives(lowlevel=run_params['lowlevel'])
     # TODO: constants range, high level, etc.
 
-    ind_params = run_params['ind_params']
-
     oper = [getattr(GP_class, i) for i in run_params['oper']]
-
     oper_prob = run_params['oper_prob']
     oper_arity = run_params['oper_arity']
-
-    online = run_params['online']
+    
     pop_size = run_params['pop_size']
     pop_dynamics = run_params['pop_dynamics']
     minimization = run_params['minimization']
-    no_populations = run_params['no_populations']
-    this_population = run_params['this_population']
-    every_gen = run_params['every_gen']
-    top_percent = run_params['top_percent']
-    topology = run_params['topology']
     n_jobs = run_params['n_jobs']
-
+    
+    if 'topology' in run_params and run_params['topology'] is not None:
+        topology = run_params['topology']
+        no_populations = run_params['no_populations']
+        this_population = run_params['this_population']
+        every_gen = run_params['every_gen']
+        top_percent = run_params['top_percent']
+    else:
+        topology = None
+        no_populations = 1
+        this_population = 0
+        every_gen = 10
+        top_percent = .1
+        
+    
+    online = run_params['online']
     # Read dataset file
     f = np.load(run_params['dataset'], allow_pickle=True)
-
     if online:
         epochs = run_params['epochs']
         generations = None
         # Load training dataset
         samples = f['batchesX']
         labels = f['batchesY']
-
     else:
         epochs = None
         generations = run_params['generations']
         # Load training dataset
         samples = f['x_training']
         labels = f['y_training']
-
     # Load testing dataset
     x_test = f['x_testing']
     y_test = f['y_testing']
+    
 
 
     GP = GeneticProgramIE(individual_class=GP_class,
