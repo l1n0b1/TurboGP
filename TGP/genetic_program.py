@@ -476,7 +476,6 @@ class GeneticProgramIE(GeneticProgram):
             pbar.close()
 
 
-
         print("Training fitness of best individual found: ", self.fitness[-1])
         if X_test:
             print("Testing  fitness of best individual found: ", self.test_fitness[-1])
@@ -502,7 +501,7 @@ class GeneticProgramIE(GeneticProgram):
                 dest = 0
         else:
             # Unkown topology; export to an unreachable island
-            dest = self.no_populations
+            dest = -1
             
         # Send them if migration enabled (if topology is not None)
         if self.topology is not None:
@@ -777,8 +776,12 @@ def main(file_name):
         topology = None
         no_populations = 1
         this_population = 0
-        every_gen = 10
-        top_percent = .1
+        every_gen = 10  
+        top_percent = .01
+    
+    # this_population parameter can also be used by autoexperimenter (auto.py)
+    if 'this_population' in run_params:
+        this_population = run_params['this_population']        
         
     
     online = run_params['online']
@@ -822,10 +825,24 @@ def main(file_name):
                           n_jobs=n_jobs)
 
 
+    start = time.time()
+    # Launch it!
+    # But do not calculate fitness for test set, because it can be very expensive, and single threaded, in many scenearios
     result = GP.fit(samples, labels)
-
+    end = time.time()
+    # Calculate test fitness only at the end, and only if, test set provided
     if x_test is not None:
-        print("Pop num: ", this_population, ' testing data score: ', GP.natural_score(x_test, y_test))
+        testscore = GP.natural_score(x_test, y_test)
+        print("Pop num: ", this_population, ' testing data score: ', testscore)
+    else:
+        testscore = 0
+    
+    if 'save_results_tofile' in run_params:
+        save_results_tofile = run_params['save_results_tofile']
+        if save_results_tofile:
+            # File must exists
+            with open("Results-{}".format(this_population), "a") as resultsfile:
+                print("{}, {}, {}".format(GP.fitness[-1], testscore, end-start), file=resultsfile)
 
 
 if __name__ == "__main__":
