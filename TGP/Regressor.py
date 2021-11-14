@@ -42,7 +42,7 @@ class SimpleRegresor:
     against a single sample and its label (case_fitness), evaluate the performance of the individual against a bunch
     of labeled samples (fitness), and methods that implement genetic operations applicable to this type of individual.'''
 
-    def __init__(self, input_vector_size, complexity, grow_method='variable'):
+    def __init__(self, input_vector_size, complexity, temp_var = 0.02, grow_method='variable'):
         '''This is the constructor method for the SimpleRegresor class. In order to create and initialize an individual
         of this class, you have to define the size of the input vectors (input_vector_size), the max tree depth allowed
         (complexity), and the grow method.'''
@@ -70,6 +70,9 @@ class SimpleRegresor:
         # SimpleRegresor uses MSE as error measure. Finding an acceptable or optimal SimpleRegresor is a minimization
         # problem; thefore, fitness value is initialized to inf.
         self.fitness_value = float('Inf')
+        
+        # This coefficient is used for numeric mutation operation
+        self.temp_var = temp_var
 
     def predict(self, instance):
         '''This function applies the individual to a sample (instance) in order to perform a prediction. '''
@@ -327,6 +330,28 @@ class SimpleRegresor:
         offspring1.tree, offspring2.tree = subtree_crossover(filter1.tree, node1, filter2.tree, node2)
 
         return offspring1, offspring2
+    
+    @staticmethod
+    def mutation_i2(filter1):
+        ''' This is a wrapper method for the numeric mutation genetic operation defined in GPOperators
+        module. It attempts to be an implementation it as close as possible to the version originally 
+        proposed by Evett & Fernandez (1998). 
+        
+        The only major difference between the operaiton as originally described and here implemented is
+        that Evett & Fernandez utilized the fitness of the best individual in the population to specify
+        the range from which constant leaf nodes could take an updated value, whereas here we use the 
+        fitness of the individual to be mutated itself. Since an entire population moves altogether 
+        towards optimal regions of the search space, the version herein proposed might not differ that 
+        much in performance in comparison with the original version of the operation.
+        
+        In any case, it should not be too dificult to modify the required functions in TurboGP in order
+        to obtain the operation exactly as originally proposed.'''
+
+        offspring = deepcopy(filter1)
+
+        offspring.tree = numeric_mutation(offspring.tree, offspring.fitness_value, offspring.temp_var)
+
+        return offspring
 
     @staticmethod
     def composition(filter1):
