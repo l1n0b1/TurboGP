@@ -309,6 +309,33 @@ def subtree_mutation(tree,node):
 
     return result
 
+def numeric_mutation(tree, fitness_value, c=0.02):
+    ''' Numeric Mutation was proposed by Matthew Evett and Thomas Fernandez (1998) as a genetic operation 
+    aimed at optimized the numerical constants (i2-type of nodes, under Rodriguez-Coayahuitl taxonomy, IEEE-
+    ROPEC-2019) of GP individuals. The idea is to perturb every constant leaf node value with an additive
+    factor taken from a range specified by the error of the best indiviual in the population, multuplied by
+    a constant factor. Evett & Fdez suggest a value of 0.02 for the constant factor they called "temperature
+    variance constant". The idea is that, as the population moves towards better solutions, the perturbation
+    added to the constant nodes will decrease, whereas in early stages of an evolutionary process, this GP
+    operation is more aggressive, in a similar fashion to the concept of simmulated annealing.
+    
+    This method implements the basic logic for numeric mutation; nevertheless, it needs to be complemented
+    by corresponding wrapper functions in GP individuals classes definitions.'''
+    
+    # Calc range for allowed perturbation
+    temp_factor = fitness_value * c
+    
+    # Sweep all tree nodes searching for i2 nodes
+    for node in tree.nodes:
+        # if scalar constant
+        if node.node_type == 'i2':
+            # generate additve factor
+            noise = np.random.uniform(-temp_factor, temp_factor)
+            # modify node value
+            node.function = node.function + noise
+    
+    return tree
+
 def function_composition(tree, g_depth, grow_method='variable'):
     ''' Composition is a new kind of GP operation, a variant of mutation. This operations receives
     as input a tree and a control parameter named g_depth. A new tree , g, is created with maximum
