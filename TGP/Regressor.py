@@ -70,7 +70,7 @@ class SimpleRegresor:
         # SimpleRegresor uses MSE as error measure. Finding an acceptable or optimal SimpleRegresor is a minimization
         # problem; thefore, fitness value is initialized to inf.
         self.fitness_value = float('Inf')
-        
+
         # This coefficient is used for numeric mutation operation
         self.temp_var = temp_var
 
@@ -330,20 +330,20 @@ class SimpleRegresor:
         offspring1.tree, offspring2.tree = subtree_crossover(filter1.tree, node1, filter2.tree, node2)
 
         return offspring1, offspring2
-    
+
     @staticmethod
     def mutation_i2(filter1):
         ''' This is a wrapper method for the numeric mutation genetic operation defined in GPOperators
-        module. It attempts to be an implementation it as close as possible to the version originally 
-        proposed by Evett & Fernandez (1998). 
-        
+        module. It attempts to be an implementation it as close as possible to the version originally
+        proposed by Evett & Fernandez (1998).
+
         The only major difference between the operaiton as originally described and here implemented is
         that Evett & Fernandez utilized the fitness of the best individual in the population to specify
-        the range from which constant leaf nodes could take an updated value, whereas here we use the 
-        fitness of the individual to be mutated itself. Since an entire population moves altogether 
-        towards optimal regions of the search space, the version herein proposed might not differ that 
+        the range from which constant leaf nodes could take an updated value, whereas here we use the
+        fitness of the individual to be mutated itself. Since an entire population moves altogether
+        towards optimal regions of the search space, the version herein proposed might not differ that
         much in performance in comparison with the original version of the operation.
-        
+
         In any case, it should not be too dificult to modify the required functions in TurboGP in order
         to obtain the operation exactly as originally proposed.'''
 
@@ -372,3 +372,57 @@ class SimpleRegresor:
             offspring.tree.nodes[i].parent_type = 'f1'
 
         return offspring
+
+
+class RegressorLS(SimpleRegresor):
+    ''' This class implements a GP based regressor based on the model proposed by Maarten Keijzer (2003).
+    This type of regressor performs a linear scaling to align its vector of preditions to the vector of
+    ground truths. This allows the GP to focus on finding a function that best resembles the shape of the
+    target function, rather than waste evolutionary cycles on finding an acceptable bias and/or scale
+    factor. Everything else regarding this type of GP individual is exactly the same as its parent class,
+    SimpleRegresor.'''
+
+
+    def fitness(self, samples_matrix, labels_matrix):
+        ''' This function calculates the fitness of the individual, for a given dataset. RegressorLS uses the
+        MSE as error measure, but with a linear scaling to align its outputs with the ground truth labels.'''
+
+        t = labels_matrix
+        y = np.asarray(list(map(self.predict, samples_matrix)))
+
+        t_avg = t.mean()
+        y_avg = y.mean()
+
+        self.dem = np.sum(np.square(y - y_avg))
+
+        if self.dem == 0:
+            self.fitness_value = float('Inf')
+            return self.fitness_value
+
+        self.b = np.sum((t - t_avg)*(y - y_avg))/self.dem
+
+        self.a = t_avg - (self.b * y_avg)
+
+        # ssd = np.sum(np.square(self.a + (self.b*y) - t))
+
+        # mse
+        self.fitness_value = np.square(self.a + (self.b*y) - t).mean()
+
+        return self.fitness_value
+
+    def score(self, samples_matrix, labels_matrix):
+        ''' Score function in RegressorLS works in similarly to the fitness method, however it does not
+        calculates the slope and intercept, but rather uses the ones computed last time fitness was calculated.
+        As with other TurboGP GP individual classes, this score function does not updated the fitness value of
+        its individual.'''
+
+        if self.dem == 0:
+            return float('Inf')
+
+        t = labels_matrix
+        y = np.asarray(map(self.predict, samples_matrix))
+
+        # mse
+        testing_fitness= np.square(self.a + (self.b*y) - t).mean()
+
+        return testing_fitness
