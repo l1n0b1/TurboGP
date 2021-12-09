@@ -82,6 +82,25 @@ First commit. Features included:
 - NonConvFilter, NonConvolutionalMezzanineFilter classes for image denoising.
 - Live training, testing fitness, and diversity plotting; generated models visualization.
 
+
+## TO-DO
+
+Minor improvements required:
+
+- Add _simplification_ and _prunning_ techniques.
+- Parallelize genetic operations (only evaluations are carried in parallel in multiple CPU systems).
+- Add _forest_-based GP individuals class, and examples (e.g. GP autoencoder).
+
+## Roadmap
+
+Major upcoming or planned features:
+
+- Cooperative Co-Evolutionary GP models [10].
+- Add support for local search (_memetic_ [11]) GP enhanced variants.
+- Add support for subroutine discovery (cooperative models, ADFs [12], etc.)
+- Provide compatibility with PyPy for faster runtimes.
+
+
 ## References
 
 [1] Koza, J. R., & Koza, J. R. (1992). Genetic programming: on the programming of computers by means of natural selection (Vol. 1). MIT press.
@@ -101,3 +120,9 @@ First commit. Features included:
 [8] Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
 
 [9] Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
+
+[10] Rodriguez-Coayahuitl, L., Morales-Reyes, A., Escalante, H. J., & Coello, C. A. C. (2020, September). Cooperative co-evolutionary genetic programming for high dimensional problems. In International Conference on Parallel Problem Solving from Nature (pp. 48-62). Springer, Cham.
+
+[11] Emigdio, Z., Trujillo, L., Schütze, O., & Legrand, P. (2014). Evaluating the effects of local search in genetic programming. In EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V (pp. 213-228). Springer, Cham.
+
+[12] Koza, J. R. (1994). Genetic programming II: automatic discovery of reusable programs. MIT press.
