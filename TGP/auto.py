@@ -18,7 +18,11 @@ import subprocess
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
+#cmap='YlGnBu'
+cmap='plasma'
 
 def run_cells_concurrently(linear_list, runs, available_GP_threads):
     
@@ -95,8 +99,51 @@ def report_results(x_axis, y_axis, z_axis, linear_list):
     
     return results
 
+def save_heatmaps(result):
+    
+    for table in result:
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Training Avg'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} - Training Avg'.format(table))
+        plt.savefig("{} - Training Avg.png".format(table))
+        
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Training Std'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} - Training Std'.format(table))
+        plt.savefig("{} - Training Std.png".format(table))
+        
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Testing Avg'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} - Testing Avg'.format(table))
+        plt.savefig("{} - Testing Avg.png".format(table))
+        
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Testing Std'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} - Testing Std'.format(table))
+        plt.savefig("{} - Testing Std.png".format(table))
+        
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Time Avg'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} - Time Avg'.format(table))
+        plt.savefig("{} - Time Avg.png".format(table))
+        
+        plt.figure()
+        df_ = pd.DataFrame(result[table]['Time Std'],dtype="float")
+        sns.heatmap(df_,  xticklabels=True, yticklabels=True, cmap=cmap).set_title('{} -Time Std'.format(table))
+        plt.savefig("{} - Time Std.png".format(table))
 
-def main():
+    
+    return None
+
+def make_experiment():
+    
+     # Array of experiments to perform (list of lists)
+    experiment = []    
+    # same list as above, but linear (a single list) for easier management
+    l = []
+    
+    
+    ###########################################################################################################################################
     
     # parameters to to vary;
     # imagine a scientific paper results table; these are the parameters to sweep,
@@ -105,7 +152,7 @@ def main():
     
     x_axis = [250, 500, 1000, 2000, 4000]
     y_axis = [5, 6,]
-    z_axis = ['sonar.npz']
+    z_axis = ['keijzer5']
     
     
     # number of trial runs per experiment performed, i.e. per cell in the table 
@@ -130,18 +177,18 @@ def main():
                   'lowlevel':            ['ADD', 'SUB', 'MUL', 'DIV', 'RELU', 'MAX', 'MEAN', 'MIN', 'X2', 'SIN', 'COS', 'SQRT'],
                   'mezzanine':           None,
                   'trimmers':            None,
-                  'ind_module':          'Classifier',
-                  'ind_name':            'BinaryClassifier',
+                  'ind_module':          'Regressor',
+                  'ind_name':            'SimpleRegresor',
                   #'ind_params':          {'input_vector_size':60, 'metric':'f1_score', 'complexity':9},
                   'oper':                ['mutation', 'protected_crossover'],
                   'oper_prob':           [.5, .5],
                   'oper_arity':          [1, 2],
                   #'pop_size':            1000,
-                  'online':              False,
+                  'online':              True,
                   'generations':         100,
-                  'epochs':              1,
+                  'epochs':              10,
                   'pop_dynamics':        "Steady_State",
-                  'minimization':        False,
+                  'minimization':        True,
                   'sel_mechanism':       'binary_tournament',
                   'n_jobs':              4,
                   
@@ -160,11 +207,6 @@ def main():
     # Max number of GP processes that can be launched simultaneously
     available_GP_threads = allocated_cpus // run_params['n_jobs']
     
-    # Array of experiments to perform (list of lists)
-    experiment = []    
-    # same list as above, but linear (a single list) for easier management
-    l = []
-    
     this_population = 0
     for table in z_axis:
         # Parameter to sweep in tables
@@ -173,12 +215,16 @@ def main():
         rows = []
         for row in y_axis:
             # Parameter to sweep in rows
-            run_params['ind_params']  =  {'input_vector_size':60, 'metric':'f1_score', 'complexity':row}
+            run_params['ind_params']  =  {'input_vector_size':1, 'complexity':row}            
             
             columns = []
             for column in x_axis:
                 # Parameter to sweep in columns
                 run_params['pop_size']  =  column
+                
+                
+                
+     ##########################################################################################################################################           
                 
                 
                 run_params['this_population']  =  this_population
@@ -204,9 +250,25 @@ def main():
             
         experiment.append(rows)
         
-    run_cells_concurrently(linear_list=l, runs=trial_runs, available_GP_threads=available_GP_threads)
+    #run_cells_concurrently(linear_list=l, runs=trial_runs, available_GP_threads=available_GP_threads)
 
+    return x_axis, y_axis, z_axis, l, trial_runs, available_GP_threads
+
+def main():
     
+    # generate setup file for GP runs and (if do no exists) empty files for results.
+    # if files for results do exists, are not modified, so auto can be run over previous auto to add more trial runs.
+    x_axis, y_axis, z_axis, linear_list, runs, available_GP_threads = make_experiment()
+    
+    # launch experiments using assigned CPU threads
+    #run_cells_concurrently(linear_list=linear_list, runs=runs, available_GP_threads=available_GP_threads)
+    
+    # load results from files in disk to pandas dataframes
+    result = report_results(x_axis, y_axis, z_axis, linear_list)
+    
+    # plot results in image files
+    save_heatmaps(result)
+
 
 if __name__ == "__main__":
     main()
