@@ -13,6 +13,9 @@
 
 import pickle
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator
 from inspect import signature
 
 
@@ -84,7 +87,7 @@ def keijzer7(x):
     
     f = 0
     
-    for i in range(int(x)):
+    for i in range(1,int(x)):
         f += (1. / i)
     
     return f
@@ -203,6 +206,48 @@ def Nguyen7(x):
     
     return y
 
+def linobi0(x):
+    ''' Similar to keijzer9, this simple, but non-linear, function can serve as a
+    quick GP benchmark, although only when sin is not included in the primitives set;
+    otherwise it would be trivial for GP to solve.'''
+    
+    y = np.sin(x)
+    
+    return y
+
+def linobi1(x,y):
+    ''' This function is taken from matplotlib documentation for 3D surfaces ploting: 
+    https://matplotlib.org/stable/gallery/mplot3d/surface3d.html. I was originally 
+    following the example in order to add a 3D plotting method to this module, but then 
+    I thought it would be nice to use it as GP synthetic benchmark as well :) '''
+    
+    z = np.sin(np.sqrt(x**2 + y**2))
+    
+    return z
+
+def linobi2(x,y):
+    ''' This function is taken from gplearn documentation, 
+    https://gplearn.readthedocs.io/en/stable/examples.html It was proposed as a good
+    artificial regression dataset that serves as an example of a function difficult to
+    approximate by decision trees and random forests, while being relatively easy for GP.
+    Therefore, I also decided to include it on this collection of benchmark problems, as
+    it can serve as an unit test for GP in overall.'''
+    
+    z = x**2 - y**2 + y - 1
+    
+    return z
+
+def linobi3(x,y):
+    ''' This function is taken from Morse & Stanley (2016). In their paper, they proposed
+    this function as testbed for a evolutionary method for neural net weights optimization.
+    This function is relatively easy for neural networks to approximate; on the other hand,
+    it is particularly difficultt for GP, specifically when trigonometric functions are not
+    part of the primitives set. Therefore, I considered it fit for benchmarking GP against
+    neural nets, as well as research into automatic subroutine discovery. '''
+    
+    z = (np.sin(5*x*(3*y + 1)) + 1.) / 2.
+    
+    return z
 
 
 
@@ -449,6 +494,56 @@ def generator(func, train_range, train_samples, test_samples, mode='random', tes
     return ds_ 
 
 
+def plot2d(func, plot_range , resolution):
+    
+    ds_ = generator(func, plot_range, resolution, 10, mode='l_mesh')
+    
+    fig = plt.figure(figsize=(8,8))
+    ax = fig.add_subplot(111)
+    ax.grid(True)
+    plt.axhline(color='black', lw=1.)
+    plt.axvline(color='black', lw=1.)
+
+    line1, = ax.plot(ds_['x_training'], ds_['y_training'], 'b-', label=func.__name__)
+
+    ax.legend()
+    plt.show()
+    
+    return None
+
+
+def plot3D(func, plot_range, resolution):
+    
+    ds_ = generator(func, plot_range, resolution, 10, mode='l_mesh')
+    
+    a,b = plot_range
+    ax_res = int(np.sqrt(resolution))
+    
+    X = np.linspace(a, b, ax_res)
+    Y = np.linspace(a, b, ax_res)
+    
+    X, Y = np.meshgrid(X, Y)
+    
+    Z = ds_['y_training'].reshape(ax_res,ax_res)
+    
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(10,10))
+    surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+                           linewidth=0, antialiased=False, alpha=0.7)
+
+    # Customize the z axis.
+    # ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    # A StrMethodFormatter is used automatically
+    ax.zaxis.set_major_formatter('{x:.02f}')
+
+    # Add a color bar which maps values to colors.
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    
+
+    plt.show()
+    
+    return None
+
 
 '''
 
@@ -464,5 +559,6 @@ Topchy, A., & Punch, W. F. (2001, July). Faster genetic programming based on loc
 
 Uy, N. Q., Hoai, N. X., O’Neill, M., McKay, R. I., & Galván-López, E. (2011). Semantically-based crossover in genetic programming: application to real-valued symbolic regression. Genetic Programming and Evolvable Machines, 12(2), 91-119.
 
+Morse, G., & Stanley, K. O. (2016, July). Simple evolutionary optimization can rival stochastic gradient descent in neural networks. In Proceedings of the Genetic and Evolutionary Computation Conference 2016 (pp. 477-484).
 
 '''
