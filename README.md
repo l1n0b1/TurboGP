@@ -57,6 +57,16 @@ This project is licensed under The GNU General Public License v3.0  - see the [L
 
 ## Changelog
 
+### Version 1.3
+
+Third release. New features:
+
+- Added numeric mutation genetic operation [13].
+- Added RegressorLS GP individual (SimpleRegresor with Linear Scaling [14].
+- Added script to automatize multiple runs of different GP setups.
+- Added collection of artificial regression datasets.
+- Cleaned coded in general and other minor corrections.
+
 ### Version 1.2
 
 Second release. New features:
@@ -126,3 +136,7 @@ Major upcoming or planned features:
 [11] Emigdio, Z., Trujillo, L., Schütze, O., & Legrand, P. (2014). Evaluating the effects of local search in genetic programming. In EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V (pp. 213-228). Springer, Cham.
 
 [12] Koza, J. R. (1994). Genetic programming II: automatic discovery of reusable programs. MIT press.
+
+[13] Evett, M., & Fernandez, T. (1998). Numeric mutation improves the discovery of numeric constants in genetic programming. Genetic Programming, 66-71.
+
+[14] Keijzer, M. (2003, April). Improving symbolic regression with interval arithmetic and linear scaling. In European Conference on Genetic Programming (pp. 70-82). Springer, Berlin, Heidelberg.
