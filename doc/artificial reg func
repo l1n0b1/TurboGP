@@ -1,0 +1,114 @@
+keijzer3:
+
+range (-10., 10.)
+
+
+
+keijzer4:
+
+hard: (-3.14, 3.14)
+harder: (-10, 10)
+
+
+
+keijzer5:
+
+hard: (0, 2pi)
+harder: (-1/2pi, 2pi)
+hardest: (-2pi, 2pi)
+
+
+
+keijzer7:
+
+hard: (1, 10)
+easier: (1, 20)
+easiest: (1,30)
+Note: it is not defined for values  < 1
+
+
+
+keijzer8:
+
+range (0.05-20)
+Note: note defined for <=0
+
+
+
+keijzer9:
+
+range (0-1000)
+Note: note defined for <=0
+
+
+
+keijzer10:
+
+range: (-10, 10)
+
+
+
+keijzer11:
+
+range (0,2)
+
+
+
+keijzer12:
+
+hard: (-.5pi, .5pi)
+harder: (-pi, pi)
+easy: (-10, 10)
+
+
+
+keijzer13:
+
+easy: (-1,1)
+
+
+
+keijzer14:
+
+hard: (-pi, pi)
+ultra hard, repetitive: (-2pi, 2pi)
+
+
+
+keijzer15
+
+range: (-2,2)
+
+
+
+keijzer16
+
+easy: (-1,1)
+hard: (-2,2)
+
+
+
+linobi0
+
+medium: (-3.14, 3.14)
+
+
+linobi1
+
+range: (-5, 5)
+
+
+
+linobi2
+
+easy: (-1, 1)
+easy: (-5, 5)
+Note: this function might look complicaded, but it is actually rather simple for GP
+
+
+
+linobi3
+
+very hard (-.5, .5)
+extremely hard (-1., 1)
+nigh impossible (-1.5, 1.5)
