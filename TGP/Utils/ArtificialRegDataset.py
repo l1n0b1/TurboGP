@@ -545,6 +545,15 @@ def plot3D(func, plot_range, resolution):
     return None
 
 
+if __name__ == "__main__":
+    
+    # Generate a dataset composed of 1000 training samples split in 10 minibatches of 100 samples each, randomly sampling "linobi0" function, 
+    # with input values from -3.14 to + 3.14, with 100 testing sample, save it to pickle file "linobi0-pi-1000-100.npz"
+    
+    ds_ = generator(func=linobi0, train_range=(-3.14,3.14), train_samples=1000, test_samples=100, mode='random', save_to_disk="linobi0-pi-1000-100.npz", online=True, batch_size=100)
+    
+    # refer to file quick_run.py to see a quick GP run using generated dataset above
+
 '''
 
 Bibliography
