@@ -186,7 +186,7 @@ def make_experiment():
                   #'pop_size':            1000,
                   'online':              True,
                   #'generations':         100,
-                  'epochs':              10,
+                  #'epochs':              10,
                   'pop_dynamics':        "Steady_State",
                   'minimization':        True,
                   'sel_mechanism':       'binary_tournament',
@@ -222,7 +222,7 @@ def make_experiment():
             for column in x_axis:
                 # Parameter to sweep in columns
                 run_params['dataset']  =  "keijzer12-05pi-5000-{}.npz".format(column)
-                
+                run_params['epochs'] = 100 // (5000 // column)
                 
                 
                 
@@ -263,7 +263,7 @@ def main():
     x_axis, y_axis, z_axis, linear_list, runs, available_GP_threads = make_experiment()
     
     # launch experiments using assigned CPU threads
-    #run_cells_concurrently(linear_list=linear_list, runs=runs, available_GP_threads=available_GP_threads)
+    run_cells_concurrently(linear_list=linear_list, runs=runs, available_GP_threads=available_GP_threads)
     
     # load results from files in disk to pandas dataframes
     result = report_results(x_axis, y_axis, z_axis, linear_list)
