@@ -325,12 +325,15 @@ def numeric_mutation(tree, fitness_value, c=0.02):
     # Calc range for allowed perturbation
     temp_factor = fitness_value * c
     
+    rng = np.random.default_rng()
+    
     # Sweep all tree nodes searching for i2 nodes
     for node in tree.nodes:
         # if scalar constant
         if node.node_type == 'i2':
             # generate additve factor
-            noise = np.random.uniform(-temp_factor, temp_factor)
+            #noise = np.random.uniform(-temp_factor, temp_factor)
+            noise = (2 * temp_factor) * rng.random() - temp_factor
             # modify node value
             node.function = node.function + noise
     

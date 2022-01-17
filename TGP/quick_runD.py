@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from genetic_program import GeneticProgram
+from genetic_program import GeneticProgramD
 from Regressor import RegressorLS          # GP individual we will use
 from GPUtils import tournament
 
@@ -21,7 +21,7 @@ y_testing = f['y_testing']
 
 # Define GP run parameters:
 lowlevel = ['ADD', 'SUB', 'MUL', 'DIV', 'RELU', 'MAX', 'MEAN', 'MIN', 'X2', 'SQRT'] # Primitives
-GeneticProgram.set_primitives(lowlevel=lowlevel)
+GeneticProgramD.set_primitives(lowlevel=lowlevel)
 
 #gp_individual_class = SimpleRegresor            # Type of individual to evolve
 ind_params = {'input_vector_size':2, 'complexity':12} 
@@ -34,19 +34,23 @@ oper_prob = [.4, .4, .2]                             # Probabity of each GP oper
 oper_arity = [1, 2, 1]                              # How many parents required by each operation.
 
 
-
 # Initialize predictor using a regressor as GP individual to evolve:
-GP = GeneticProgram(individual_class=RegressorLS , 
+GP = GeneticProgramD(individual_class=RegressorLS , 
                     ind_params=ind_params, 
                     operations=oper, 
                     operations_prob=oper_prob, 
                     operations_arity=oper_arity, 
-                    pop_size=4000, 
+                    pop_size=250, 
                     epochs=2,
                     pop_dynamics="Steady_State", 
                     online=True, 
                     minimization=True,
-                    n_jobs=16)
+                    sel_mechanism=tournament,
+                    n_jobs=1,
+                    no_populations=16, 
+                    every_gen=10, 
+                    top_percent=.1, 
+                    topology='linear_ring')
 
 # Train/Evolve it!
 
