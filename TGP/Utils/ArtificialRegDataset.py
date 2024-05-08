@@ -128,7 +128,10 @@ def keijzer12(x,y):
     return z
 
 def keijzer13(x,y):
-    ''' Keijzer Eq. 13. Originally taken from Topchy & Punch (2001).'''
+    ''' Keijzer Eq. 13. Originally taken from Topchy & Punch (2001).
+    This one is also known as Nguyen-12, and it's been known for being
+    particularly difficult for GP. There is some overlap between Nguyen
+    and Keijzer datasets.'''    
     
     z = (x**4) - (x**3) + ((y**2)/2) - y
     
@@ -248,6 +251,12 @@ def linobi3(x,y):
     z = (np.sin(5*x*(3*y + 1)) + 1.) / 2.
     
     return z
+
+def jin2(x):
+    
+    y = 8.0*(x**3) + 8.0*(x**2) + 15.0
+    
+    return y
 
 
 
