@@ -150,9 +150,9 @@ def make_experiment():
     # x and y axis correspong to a single table, and each parameter in z is another
     # table. This implementation provides up to 3 parameters to vary.
     
-    x_axis = [250, 500, 1000, 2000, 4000]
-    y_axis = [5, 6,]
-    z_axis = ['keijzer5']
+    x_axis = [100, 500]
+    y_axis = [1000, 2000]
+    z_axis = [7,8]
     
     
     # number of trial runs per experiment performed, i.e. per cell in the table 
@@ -160,7 +160,7 @@ def make_experiment():
     # some 'statistically significant' results; although in reality it can be 
     # any other value that is meaningful to the study being carried.
     
-    trial_runs = 3 
+    trial_runs = 15 
     
     # number of CPUs to allocate for all the experiments; this parameter will be
     # used in combination with the n_jobs parameters (no. of cpus to be used per
@@ -174,19 +174,19 @@ def make_experiment():
     # Remember that 'epochs' or 'generations' will be ignored, depending if 'online' true or false.
                 
     run_params = {#'dataset':             'temp_ds.npz',
-                  'lowlevel':            ['ADD', 'SUB', 'MUL', 'DIV', 'RELU', 'MAX', 'MEAN', 'MIN', 'X2', 'SIN', 'COS', 'SQRT'],
+                  'lowlevel':            ['ADD', 'SUB', 'MUL', 'DIV', 'RELU', 'MAX', 'MEAN', 'MIN', 'X2', 'SQRT'],
                   'mezzanine':           None,
                   'trimmers':            None,
                   'ind_module':          'Regressor',
-                  'ind_name':            'SimpleRegresor',
+                  'ind_name':            'RegressorLS',
                   #'ind_params':          {'input_vector_size':60, 'metric':'f1_score', 'complexity':9},
                   'oper':                ['mutation', 'protected_crossover'],
                   'oper_prob':           [.5, .5],
                   'oper_arity':          [1, 2],
                   #'pop_size':            1000,
                   'online':              True,
-                  'generations':         100,
-                  'epochs':              10,
+                  #'generations':         100,
+                  #'epochs':              10,
                   'pop_dynamics':        "Steady_State",
                   'minimization':        True,
                   'sel_mechanism':       'binary_tournament',
@@ -210,17 +210,19 @@ def make_experiment():
     this_population = 0
     for table in z_axis:
         # Parameter to sweep in tables
-        run_params['dataset']  =  table
+        run_params['ind_params']  =  {'input_vector_size':2, 'complexity':table}
+        
         
         rows = []
         for row in y_axis:
             # Parameter to sweep in rows
-            run_params['ind_params']  =  {'input_vector_size':1, 'complexity':row}            
+            run_params['pop_size']  =  row           
             
             columns = []
             for column in x_axis:
                 # Parameter to sweep in columns
-                run_params['pop_size']  =  column
+                run_params['dataset']  =  "keijzer12-05pi-5000-{}.npz".format(column)
+                run_params['epochs'] = 100 // (5000 // column)
                 
                 
                 
@@ -261,7 +263,7 @@ def main():
     x_axis, y_axis, z_axis, linear_list, runs, available_GP_threads = make_experiment()
     
     # launch experiments using assigned CPU threads
-    #run_cells_concurrently(linear_list=linear_list, runs=runs, available_GP_threads=available_GP_threads)
+    run_cells_concurrently(linear_list=linear_list, runs=runs, available_GP_threads=available_GP_threads)
     
     # load results from files in disk to pandas dataframes
     result = report_results(x_axis, y_axis, z_axis, linear_list)

@@ -559,14 +559,9 @@ if __name__ == "__main__":
     # Generate a dataset composed of 1000 training samples split in 10 minibatches of 100 samples each, randomly sampling "linobi0" function, 
     # with input values from -3.14 to + 3.14, with 100 testing sample, save it to pickle file "linobi0-pi-1000-100.npz"
     
-    ds_ = generator(func=keijzer12, 
-                    train_range=(-1.57,1.57), 
-                    train_samples=5000, 
-                    test_samples=500, 
-                    mode='random', 
-                    save_to_disk="keijzer12-05pi-5000-50.npz", 
-                    online=True, 
-                    batch_size=50)
+    ds_ = generator(func=linobi0, train_range=(-3.14,3.14), train_samples=1000, test_samples=100, mode='random', save_to_disk="linobi0-pi-1000-100.npz", online=True, batch_size=100)
+    
+    # Example used in paper
     
     ds_ = generator(func=keijzer12, 
                     train_range=(-1.57,1.57), 
@@ -576,24 +571,7 @@ if __name__ == "__main__":
                     save_to_disk="keijzer12-05pi-5000-100.npz", 
                     online=True, 
                     batch_size=100)
-    
-    ds_ = generator(func=keijzer12, 
-                    train_range=(-1.57,1.57), 
-                    train_samples=5000, 
-                    test_samples=500, 
-                    mode='random', 
-                    save_to_disk="keijzer12-05pi-5000-250.npz", 
-                    online=True, 
-                    batch_size=250)
-    
-    ds_ = generator(func=keijzer12, 
-                    train_range=(-1.57,1.57), 
-                    train_samples=5000, 
-                    test_samples=500, 
-                    mode='random', 
-                    save_to_disk="keijzer12-05pi-5000-500.npz", 
-                    online=True, 
-                    batch_size=500)
+
     
     # refer to file quick_run.py to see a quick GP run using generated dataset above
 
