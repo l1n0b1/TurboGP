@@ -420,7 +420,7 @@ class RegressorLS(SimpleRegresor):
             return float('Inf')
 
         t = labels_matrix
-        y = np.asarray(map(self.predict, samples_matrix))
+        y = np.asarray(list(map(self.predict, samples_matrix)))
 
         # mse
         testing_fitness= np.square(self.a + (self.b*y) - t).mean()

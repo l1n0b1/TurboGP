@@ -22,6 +22,7 @@
 
 
 import math
+import numpy as np
 #from numba import jit
 
 
@@ -46,18 +47,43 @@ def DIV(a1, a2):
 
 #@jit(nopython=True)
 def SIN(a1):
-    result = math.sin(a1)
+    result = np.sin(a1)
     return result
 
 #@jit(nopython=True)
 def COS(a1):
-    result = math.cos(a1)
+    result = np.cos(a1)
     return result
 
 #@jit(nopython=True)
 def SQRT(a1):
     result = math.sqrt(math.fabs(a1))
     return result
+
+#@jit(nopython=True)
+def LOG(a1):
+    if a1 == 0:
+        result = 0
+    else:
+        result = math.log(math.fabs(a1))
+    return result
+
+#@jit(nopython=True)
+def EXP(a1):
+    result = np.exp(a1)
+    return result
+
+#@jit(nopython=True)
+def ARCSIN(a1):
+    b1 = a1
+    if b1 > 1.0:
+        b1 = 1.0
+    if b1 < -1.0:
+        b1 = -1.0
+    
+    result = math.asin(b1)
+    return result
+
 
 #@jit(nopython=True)
 def X2(a1):
@@ -101,4 +127,4 @@ def IFTE(a1, a2, a3):
 
 #@jit(nopython=True)
 def POW(a1, a2):
-    return math.pow(math.fabs(a1),a2)
+    return np.power(math.fabs(a1),a2)
