@@ -213,8 +213,43 @@ $z = 6 \sin(x) \cos(y)$
 - Range 1, $(-\pi, \pi)$:
 
 ![Keijzer 14 Range 1](keijzer14-pipi.png)
-- Range 1, $(-\pi, \pi)$:
+- Range 2, $(-2\pi, 2\pi)$:
 
 ![Keijzer 14 Range 2](keijzer14-2pi2pi.png)
+
+---
+
+### Keijzer 15
+The `Keijzer 15` function is given by the formula:
+
+$z = \frac{8}{2 + x^2 + y^2}$
+
+
+#### Suggested Ranges
+- Range 1: $(-2,2)$
+
+
+#### Plots
+- Range 1, $(-2,2)$:
+
+![Keijzer 15 Range 1](keijzer15-22.png)
+
+---
+
+### Keijzer 16
+The `Keijzer 16` function is given by the formula:
+
+$z = \frac{x^3}{5} + \frac{y^3}{2} - y - x$
+
+#### Suggested Ranges
+- Range 1: $(-1, 1)$
+- Range 2: $(-2, 2)$
+
+#### Plots
+- Range 1, $(-\pi, \pi)$:
+
+![Keijzer 16 Range 1](keijzer16-11.png)
 - Range 2, $(-2\pi, 2\pi)$:
+
+![Keijzer 16 Range 2](keijzer16-22.png)
 
