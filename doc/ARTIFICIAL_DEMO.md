@@ -4,7 +4,7 @@
 TurboGP comes with a comprehensive set of artificial regression problems that are ready to be tested with the library. Most of these problems are classical benchmarks commonly found in the research literature, but there are also some unique problems that have not been previously proposed within the GP literature. Each problem is detailed with its mathematical formula, suggested ranges for generating the function, and illustrative plots. For proper references and further details, you can refer to the source file that generates these datasets, located at `Utils/ArtificialRegDataset.py`.
 
 
-
+---
 
 ### Keijzer 3
 The `Keijzer 12` function is given by the formula:
@@ -20,7 +20,7 @@ $y = 3.1416x^2 + 100$
 
 ![Keijzer 3 Range 1](keijzer3.png)
 
-
+---
 
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
