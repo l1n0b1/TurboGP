@@ -181,6 +181,40 @@ $z = (xy) + \sin((x - 1)(y - 1))$
 
 ![Keijzer 12 Range 3](keijzer12-1010.png)
 
+---
+
+### Keijzer 13
+The `Keijzer 13` function is given by the formula:
+
+$z = x^4 - x^3 + \frac{y^2}{2} - y$
 
 
+#### Suggested Ranges
+- Range 1: $(-1,1)$
+
+
+#### Plots
+- Range 1, $(-1,1)$:
+
+![Keijzer 13 Range 1](keijzer13-11.png)
+
+---
+
+### Keijzer 14
+The `Keijzer 14` function is given by the formula:
+
+$z = 6 \sin(x) \cos(y)$
+
+#### Suggested Ranges
+- Range 1: $(-\pi, \pi)$
+- Range 2: $(-2\pi, 2\pi)$
+
+#### Plots
+- Range 1, $(-\pi, \pi)$:
+
+![Keijzer 14 Range 1](keijzer14-pipi.png)
+- Range 1, $(-\pi, \pi)$:
+
+![Keijzer 14 Range 2](keijzer14-2pi2pi.png)
+- Range 2, $(-2\pi, 2\pi)$:
 
