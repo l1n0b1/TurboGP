@@ -6,6 +6,22 @@ TurboGP comes with a comprehensive set of artificial regression problems that ar
 
 
 
+### Keijzer 3
+The `Keijzer 12` function is given by the formula:
+
+$y = 3.1416x^2 + 100$
+
+#### Suggested Ranges
+- Range 1: $(-10, 10)$
+
+
+#### Plots
+- Range 1, $(-10, 10)$:
+
+![Keijzer 3 Range 1](keijzer3.png)
+
+
+
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
 
@@ -26,4 +42,7 @@ $z = (xy) + \sin((x - 1)(y - 1))$
 - Range 3, $(10, 10)$:
 
 ![Keijzer 12 Range 3](keijzer12-1010.png)
+
+
+
 
