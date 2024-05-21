@@ -258,7 +258,7 @@ $z = \frac{x^3}{5} + \frac{y^3}{2} - y - x$
 ### Linobi 0
 The `Linobi 0` function is given by the formula:
 
-$y = \sin(x)}$
+$y = \sin(x)$
 
 
 #### Suggested Ranges
@@ -275,7 +275,7 @@ $y = \sin(x)}$
 ### Linobi 1
 The `Linobi 1` function is given by the formula:
 
-$z = \sin(\sqrt{x^2 + y^2})}$
+$z = \sin(\sqrt{x^2 + y^2})$
 
 
 #### Suggested Ranges
@@ -286,3 +286,49 @@ $z = \sin(\sqrt{x^2 + y^2})}$
 - Range 1, $(-5,5)$:
 
 ![Linobi 1 Range 1](linobi1-55.png)
+
+---
+
+### Linobi 2
+The `Linobi 2` function is given by the formula:
+
+$z = x^2 - y^2 + y - 1$
+
+
+#### Suggested Ranges
+- Range 1: $(-1,1)$
+- Range 2: $(-5,5)$
+
+
+#### Plots
+- Range 1, $(-5,5)$:
+
+![Linobi 2 Range 1](linobi2-11.png)
+- Range 2, $(-5,5)$:
+
+![Linobi 2 Range 2](linobi2-55.png)
+
+---
+
+### Linobi 3
+The `Linobi 3` function is given by the formula:
+
+$z = \frac{\sin(5x(3y+1))+1}{2}$
+
+
+#### Suggested Ranges
+- Range 1: $(-.5,.5)$
+- Range 2: $(-1,1)$
+- Range 2: $(-1.5,1.5)$
+
+
+#### Plots
+- Range 1, $(-.5,.5)$:
+
+![Linobi 3 Range 1](linobi3-0505.png)
+- Range 2, $(-1,1)$:
+
+![Linobi 3 Range 2](linobi3-11.png)
+- Range 3, $(-1.5,1.5)$:
+
+![Linobi 3 Range 3](linobi3-1515.png)
