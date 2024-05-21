@@ -45,7 +45,7 @@ $y = 0.3 x \sin(2 \pi x)$
 ### Keijzer 5
 The `Keijzer 5` function is given by the formula:
 
-$y = x^3 + \exp(-x) \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
+$y = x^3 e^{-x} \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
 
 #### Suggested Ranges
 - Range 1: $(0, 2\pi)$
