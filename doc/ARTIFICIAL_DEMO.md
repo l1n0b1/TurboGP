@@ -246,10 +246,43 @@ $z = \frac{x^3}{5} + \frac{y^3}{2} - y - x$
 - Range 2: $(-2, 2)$
 
 #### Plots
-- Range 1, $(-\pi, \pi)$:
+- Range 1, $(-1, 1)$:
 
 ![Keijzer 16 Range 1](keijzer16-11.png)
-- Range 2, $(-2\pi, 2\pi)$:
+- Range 2, $(-2, 2)$:
 
 ![Keijzer 16 Range 2](keijzer16-22.png)
 
+---
+
+### Linobi 0
+The `Linobi 0` function is given by the formula:
+
+$y = \sin(x)}$
+
+
+#### Suggested Ranges
+- Range 1: $(-\pi,\pi)$
+
+
+#### Plots
+- Range 1, $(-\pi,\pi)$:
+
+![Linobi 0 Range 1](linobi0-pipi.png)
+
+---
+
+### Linobi 1
+The `Linobi 1` function is given by the formula:
+
+$z = \sin(\sqrt{x^2 + y^2})}$
+
+
+#### Suggested Ranges
+- Range 1: $(-5,5)$
+
+
+#### Plots
+- Range 1, $(-5,5)$:
+
+![Linobi 1 Range 1](linobi1-55.png)
