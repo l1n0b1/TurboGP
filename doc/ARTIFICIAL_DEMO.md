@@ -90,6 +90,60 @@ Note that this function is not defined for $x < 1$
 
 ---
 
+### Keijzer 8
+The `Keijzer 8` function is given by the formula:
+
+$y = \log(x)$
+
+Note that this function is not defined for $x <= 0$
+
+#### Suggested Ranges
+- Range 1: $(.05,20)$
+
+
+#### Plots
+- Range 1, $(.05,20)$:
+
+![Keijzer 8 Range 1](keijzer8-.0520.png)
+
+---
+
+### Keijzer 9
+The `Keijzer 9` function is given by the formula:
+
+$y = \sqrt(x)$
+
+Note that this function is not defined for $x < 0$
+
+#### Suggested Ranges
+- Range 1: $(0,1000)$
+
+
+#### Plots
+- Range 1, $(0,1000)$:
+
+![Keijzer 9 Range 1](keijzer9-1000.png)
+
+---
+
+### Keijzer 10
+The `Keijzer 10` function is given by the formula:
+
+$y = \arcsin(x)$
+
+Note that this function is not defined for $x < 0$
+
+#### Suggested Ranges
+- Range 1: $(-10,10)$
+
+
+#### Plots
+- Range 1, $(-10,10)$:
+
+![Keijzer 10 Range 1](keijzer10-1010.png)
+
+---
+
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
 
