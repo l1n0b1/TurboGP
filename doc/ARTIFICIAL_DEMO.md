@@ -7,7 +7,7 @@ TurboGP comes with a comprehensive set of artificial regression problems that ar
 ---
 
 ### Keijzer 3
-The `Keijzer 12` function is given by the formula:
+The `Keijzer 3` function is given by the formula:
 
 $y = 3.1416x^2 + 100$
 
@@ -62,6 +62,31 @@ $y = x^3 e^{-x} \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
 - Range 3, $(-2\pi, 2\pi)$:
 
 ![Keijzer 5 Range 3](keijzer5-2pi2pi.png)
+
+---
+
+### Keijzer 7
+The `Keijzer 7` function is given by the formula:
+
+$y = \sum_{i=1}^{\lfloor x \rfloor - 1} \frac{1}{i}$
+
+#### Suggested Ranges
+- Range 1: $(1,30)$
+- Range 2: $(1,20)$
+- Range 3: $(1,10)$
+
+Note that this function is not defined for $ x < 1 $
+
+#### Plots
+- Range 1, $(1,30)$:
+
+![Keijzer 7 Range 1](keijzer7-30.png)
+- Range 2, $(1,20)$:
+
+![Keijzer 7 Range 2](keijzer7-20.png)
+- Range 3, $(1,10)$:
+
+![Keijzer 7 Range 3](keijzer7-10.png)
 
 ---
 
