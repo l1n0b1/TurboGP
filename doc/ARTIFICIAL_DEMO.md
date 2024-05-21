@@ -301,7 +301,7 @@ $z = x^2 - y^2 + y - 1$
 
 
 #### Plots
-- Range 1, $(-5,5)$:
+- Range 1, $(-1,1)$:
 
 ![Linobi 2 Range 1](linobi2-11.png)
 - Range 2, $(-5,5)$:
