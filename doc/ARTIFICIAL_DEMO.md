@@ -17,13 +17,13 @@ $z = (xy) + \sin((x - 1)(y - 1))$
 - Range 3: $(10, 10)$
 
 #### Plots
-- Range 1:
+- Range 1, $(-0.5\pi, 0.5\pi)$:
 
 ![Keijzer 12 Range 1](keijzer12-05pi05pi.png)
-- Range 2:
+- Range 2, $(-\pi, \pi)$:
 
 ![Keijzer 12 Range 2](keijzer12-pipi.png)
-- Range 3:
+- Range 3, $(10, 10)$:
 
 ![Keijzer 12 Range 3](keijzer12-1010.png)
 
