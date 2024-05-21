@@ -111,7 +111,7 @@ Note that this function is not defined for $x <= 0$
 ### Keijzer 9
 The `Keijzer 9` function is given by the formula:
 
-$y = \sqrt(x)$
+$y = \sqrt{x}$
 
 Note that this function is not defined for $x < 0$
 
@@ -131,7 +131,6 @@ The `Keijzer 10` function is given by the formula:
 
 $y = \arcsin(x)$
 
-Note that this function is not defined for $x < 0$
 
 #### Suggested Ranges
 - Range 1: $(-10,10)$
@@ -141,6 +140,23 @@ Note that this function is not defined for $x < 0$
 - Range 1, $(-10,10)$:
 
 ![Keijzer 10 Range 1](keijzer10-1010.png)
+
+---
+
+### Keijzer 11
+The `Keijzer 11` function is given by the formula:
+
+$z = x^y$
+
+
+#### Suggested Ranges
+- Range 1: $(0,2)$
+
+
+#### Plots
+- Range 1, $(0,2)$:
+
+![Keijzer 11 Range 1](keijzer11-02.png)
 
 ---
 
