@@ -22,6 +22,26 @@ $y = 3.1416x^2 + 100$
 
 ---
 
+### Keijzer 4
+The `Keijzer 4` function is given by the formula:
+
+$y = 0.3 x \sin(2 \pi x)$
+
+#### Suggested Ranges
+- Range 1: $(-\pi, \pi)$
+- Range 2: $(10, 10)$
+
+
+#### Plots
+- Range 1, $(-\pi, \pi)$:
+
+![Keijzer 4 Range 1](keijzer4-3.14.png)
+- Range 2, $(10, 10)$:
+
+![Keijzer 4 Range 2](keijzer4-10.png)
+
+---
+
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
 
