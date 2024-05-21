@@ -68,14 +68,14 @@ $y = x^3 e^{-x} \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
 ### Keijzer 7
 The `Keijzer 7` function is given by the formula:
 
-$y = {{\sum_{i=1}}^{\lfloor x \rfloor - 1}} \frac{1}{i}$
+$y = {\sum_{i=1}^{\lfloor x \rfloor - 1}} \frac{1}{i}$
 
 #### Suggested Ranges
 - Range 1: $(1,30)$
 - Range 2: $(1,20)$
 - Range 3: $(1,10)$
 
-Note that this function is not defined for $ x < 1 $
+Note that this function is not defined for $x < 1$
 
 #### Plots
 - Range 1, $(1,30)$:
