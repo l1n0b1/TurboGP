@@ -8,6 +8,7 @@ TurboGP comes with a comprehensive set of artificial regression problems that ar
 
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
+
 $z = (x \cdot y) + \sin((x - 1) \cdot (y - 1))$
 
 #### Suggested Ranges
@@ -16,7 +17,10 @@ $z = (x \cdot y) + \sin((x - 1) \cdot (y - 1))$
 - Range 3: $(10, 10)$
 
 #### Plots
-- Range 1: ![Keijzer 12 Range 1](keijzer12-05pi05pi.png)
-- Range 2: ![Keijzer 12 Range 2](keijzer12-pipi.png)
-- Range 3: ![Keijzer 12 Range 3](keijzer12-1010.png)
+- Range 1: $(-0.5\pi, 0.5\pi)$:
+![Keijzer 12 Range 1](keijzer12-05pi05pi.png)
+- Range 2: $(-\pi, \pi)$:
+![Keijzer 12 Range 2](keijzer12-pipi.png)
+- Range 3:  $(10, 10)$:
+![Keijzer 12 Range 3](keijzer12-1010.png)
 
