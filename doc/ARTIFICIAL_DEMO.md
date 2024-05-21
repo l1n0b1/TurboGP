@@ -68,7 +68,7 @@ $y = x^3 e^{-x} \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
 ### Keijzer 7
 The `Keijzer 7` function is given by the formula:
 
-$y = {\sum^{x}_{i} \frac{1}{i}$
+$y = {\sum_{i}^{x} \frac{1}{i}$
 
 #### Suggested Ranges
 - Range 1: $(1,30)$
