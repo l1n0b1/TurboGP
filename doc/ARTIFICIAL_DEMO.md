@@ -42,6 +42,29 @@ $y = 0.3 x \sin(2 \pi x)$
 
 ---
 
+### Keijzer 5
+The `Keijzer 5` function is given by the formula:
+
+$y = x^3 + \exp(-x) \cos(x) \sin(x) (\sin(x)^2 \cos(x) - 1)$
+
+#### Suggested Ranges
+- Range 1: $(0, 2\pi)$
+- Range 2: $(-.5\pi, 2\pi)$
+- Range 3: $(-2\pi, 2\pi)$
+
+#### Plots
+- Range 1, $(0, 2\pi)$:
+
+![Keijzer 5 Range 1](keijzer5-02pi.png)
+- Range 2, $(-.5\pi, 2\pi)$:
+
+![Keijzer 5 Range 2](keijzer5-.5pi2pi.png)
+- Range 3, $(-2\pi, 2\pi)$:
+
+![Keijzer 5 Range 3](keijzer5-2pi2pi.png)
+
+---
+
 ### Keijzer 12
 The `Keijzer 12` function is given by the formula:
 
