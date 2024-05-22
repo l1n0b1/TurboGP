@@ -332,3 +332,9 @@ $z = \frac{\sin(5x(3y+1))+1}{2}$
 - Range 3, $(-1.5,1.5)$:
 
 ![Linobi 3 Range 3](linobi3-1515.png)
+
+
+## TO-DO
+
+- Separate to a different collection functions aimed at testing for modularity.
+- Include difficulty for every given range, expressed in terms of distance metric (MSE or $R^2$) against pop size/max depth/max generations.
