@@ -128,7 +128,10 @@ def keijzer12(x,y):
     return z
 
 def keijzer13(x,y):
-    ''' Keijzer Eq. 13. Originally taken from Topchy & Punch (2001).'''
+    ''' Keijzer Eq. 13. Originally taken from Topchy & Punch (2001).
+    This one is also known as Nguyen-12, and it's been known for being
+    particularly difficult for GP. There is some overlap between Nguyen
+    and Keijzer datasets.'''    
     
     z = (x**4) - (x**3) + ((y**2)/2) - y
     
@@ -248,6 +251,12 @@ def linobi3(x,y):
     z = (np.sin(5*x*(3*y + 1)) + 1.) / 2.
     
     return z
+
+def jin2(x):
+    
+    y = 8.0*(x**3) + 8.0*(x**2) + 15.0
+    
+    return y
 
 
 
@@ -551,6 +560,18 @@ if __name__ == "__main__":
     # with input values from -3.14 to + 3.14, with 100 testing sample, save it to pickle file "linobi0-pi-1000-100.npz"
     
     ds_ = generator(func=linobi0, train_range=(-3.14,3.14), train_samples=1000, test_samples=100, mode='random', save_to_disk="linobi0-pi-1000-100.npz", online=True, batch_size=100)
+    
+    # Example used in paper
+    
+    ds_ = generator(func=keijzer12, 
+                    train_range=(-1.57,1.57), 
+                    train_samples=5000, 
+                    test_samples=500, 
+                    mode='random', 
+                    save_to_disk="keijzer12-05pi-5000-100.npz", 
+                    online=True, 
+                    batch_size=100)
+
     
     # refer to file quick_run.py to see a quick GP run using generated dataset above
 

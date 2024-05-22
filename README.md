@@ -8,13 +8,13 @@ TurboGP is a Python implementation of the Genetic Programming (GP) framework [1]
 
 * Spatially distributed populations. TurboGP supports models that allocate individuals in toroidal grid arrangements (aka cellular GP) [3], as well as provides export, import and migration operations to allow the implementation of multi-population (island) models [4].
 
-* Layers of different types of nodes. TurboGP allows the representation and recombination of GP trees with different abstraction layers. These models are specially useful in high dimensional learning problems [5-7].
+* Layers of different types of nodes. TurboGP allows the representation and recombination of GP trees with different abstraction (nodes) layers. These models are specially useful in high dimensional learning problems [5-7].
+
+* Batteries included. TurboGP comes with quick run example scripts, as well as a script to generate datasets based on an assortment of classical artificial regression problems, to readily test TurboGP. 
 
 Besides the features mentioned above, TurboGP also implements different crossover operations (_protected_ crossover variants), it allows to graphically display the individuals/models generated, and allows live plotting of the fitness and diversity evolution.
 
-<p align="center">
-  <img src="https://github.com/l1n0b1/TurboGP/blob/main/Preview.png" alt="preview"/>
-</p>
+![TurboGP](Preview.png)
 
 ## Getting Started
 
@@ -31,19 +31,18 @@ Required libraries (most of these ship by default in recent conda distributions)
 
 Optional:
 
-- numba (to considerably speed-up evolutionary runs; can be activated or deactivated in primitives sets files LowLever.py, Mezzanine.py, etc.) 
+- numba (to speed-up evolutionary runs; can be activated or deactivated in primitives sets files LowLever.py, Mezzanine.py, etc.) 
 - wget, pandas (to run UCI repository examples)
 
 For models' visualization (plotting generated trees)*:
 
 - networkx, pygraph and pygraphviz 
 
-* Only tested on Python 3.6, matplotlib 2.2.3, networkx 2.2, and pygraphviz 1.3
 
 
 ### Installing
 
-You can clone the repo and run one of the included [notebooks](TGP\01. Simple regression example.ipynb) to verify that the library works properly in your system. 
+You can clone the repo and run one of the included Jupyter notebooks or example scripts, to verify that the library works properly in your system. 
 
 ## Authors
 
@@ -56,6 +55,15 @@ See also the list of [contributors](https://github.com/l1n0b1/TurboGP/AUTHORS) w
 This project is licensed under The GNU General Public License v3.0  - see the [LICENSE](LICENSE) file for details
 
 ## Changelog
+
+### Version 1.3.1
+
+Minor release. Changes:
+
+- Added documentation to illustrate some of the included artificial regression problems.
+- Added scripts to run some of the examples (Keijzer 12 single population vs distributed) described in the TurboGP article (see below, in Citation).
+- Switched from Python standard math library + numba to numpy to implement some primitives definitions (for speed up).
+- Other minor changes, updates and bug fixes (see merge log for detailed info).
 
 ### Version 1.3
 
@@ -109,6 +117,28 @@ Major upcoming or planned features:
 - Add support for local search (_memetic_ [11]) GP enhanced variants.
 - Add support for subroutine discovery (cooperative models, ADFs [12], etc.)
 - Provide compatibility with PyPy for faster runtimes.
+
+## Citation
+
+If you find TurboGP useful, and employ it in your research, you can cite its official draft:
+
+[Rodriguez-Coayahuitl, L., Morales-Reyes, A., & Escalante, H. J. (2023). TurboGP: A flexible and advanced python based GP library. arXiv preprint arXiv:2309.00149.](https://arxiv.org/pdf/2309.00149)
+
+You will also find there some benchmarks of its features as well as a basic usage example code.
+
+For BibTeX users, you can include this entry in your `.bib` file.
+
+```
+@article{rodriguez2023turbogp,
+  title={TurboGP: A flexible and advanced python based GP library},
+  author={Rodriguez-Coayahuitl, Lino and Morales-Reyes, Alicia and Escalante, Hugo Jair},
+  journal={arXiv preprint arXiv:2309.00149},
+  year={2023}
+  url = {https://github.com/l1n0b1/TurboGP}
+}
+```
+
+---
 
 
 ## References
