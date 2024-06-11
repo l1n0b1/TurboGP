@@ -280,7 +280,7 @@ def subtree_mutation(tree,node):
     # will replace.
 
     # If No Mezzanine functions defined, then allow only low level root type
-    if Node.f2_set == None:
+    if not Node.f2_set:
         subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root='None')
     else:
         # Otherwise, allow other types of nodes

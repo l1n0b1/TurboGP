@@ -61,20 +61,6 @@ from Utils import *
 import warnings
 warnings.simplefilter('ignore')
 
-lowlevel = ['ADD', 'SUB', 'MUL', 'DIV', 'RELU', 'MAX', 'MEAN', 'MIN', 'X2', 'SIN', 'COS', 'SQRT']
-mezzanine = None
-highlevel = None
-
-constants_range = [-1.0,1.0]
-trimmers = None
-
-# Now we let the Node objects know the set of input based primitives available at each layer.
-Node.f1_set=lowlevel
-Node.f2_set=mezzanine
-Node.f3_set=highlevel
-Node.i2_set=constants_range
-Node.i3_set=trimmers
-
 
 class GeneticProgram:
     ''' This class provides the scikit-alike interface to easily generate predictors using TurboGP library.
@@ -269,7 +255,7 @@ class GeneticProgram:
         return self.model_.score(X,y)
 
     @staticmethod
-    def set_primitives(lowlevel, mezzanine=None, highLevel=None, constants_range=[-1.0,1.0], trimmers=None):
+    def set_primitives(lowlevel, mezzanine=[], highlevel=[], constants_range=[-1.0,1.0], trimmers=[]):
         ''' This function is used to set the primitives for GeneticProgram objects. It receives as input:
         - lowlevel (list) list of strings that reference to the low level primitives as defined in LowLevel file
         - mezzanine (list) ...
@@ -696,7 +682,7 @@ class GeneticProgramD(GeneticProgram):
 
 
     @staticmethod
-    def set_primitives(lowlevel, mezzanine=None, highLevel=None, constants_range=[-1.0,1.0], trimmers=None):
+    def set_primitives(lowlevel, mezzanine=[], highlevel=[], constants_range=[-1.0,1.0], trimmers=[]):
         ''' Overloaded function from GeneticProgram.'''
 
         GeneticProgramD.f1_set=lowlevel
