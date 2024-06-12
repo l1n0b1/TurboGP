@@ -314,8 +314,8 @@ def get_graph(tree, mode='type'):
     ''' This function receives as input a tree, and returns as output a networkx' graph, that can be plot with graphviz,
     and pygraphviz libraries.'''
 
-    node_type = ['f1', 'f2', 'f3', 'i1', 'i2', 'i3', 'i4']
-    colors = ['dodgerblue', 'pink', 'red', 'green', 'lightgray', 'lime', 'gray']
+    node_type = ['f1', 'f2', 'f3', 'f4', 'i1', 'i2', 'i3', 'i4']
+    colors = ['dodgerblue', 'pink', 'red', 'orange', 'green', 'lightgray', 'lime', 'gray']
 
     colors_dict = {node_type[i]: colors[i] for i in range(len(node_type))}
 
@@ -332,6 +332,8 @@ def get_graph(tree, mode='type'):
             edges.append(a)
         if node.node_type == 'i2':
             labels[node.node_id] = '{:.3f}'.format(node.function)
+        elif node.node_type == 'f4':
+            labels[node.node_id] = 'adf{}'.format(node.function)
         else:
             labels[node.node_id] = '{}'.format(node.function)
         nodes_type.append(node.node_type)
@@ -346,7 +348,7 @@ def get_graph(tree, mode='type'):
             else:
                 color_map.append(node.color)
 
-    graph = nx.OrderedDiGraph()
+    graph = nx.DiGraph()
     graph.add_nodes_from(nodes)
     graph.add_edges_from(edges)
     #graph2 = graph.reverse()

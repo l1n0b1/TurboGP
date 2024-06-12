@@ -22,8 +22,8 @@ TurboGP ships with several jupyter notebooks that explain in detail how to use t
 
 ### Prerequisites
 
-TurboGP should run on any version of Python >= 3.6.
-Required libraries (most of these ship by default in recent conda distributions):
+TurboGP should run on any version of Python >= 3.8.
+Required libraries:
 
 - numpy 
 - TQDM (to display progressbar)
@@ -34,11 +34,16 @@ Optional:
 - numba (to speed-up evolutionary runs; can be activated or deactivated in primitives sets files LowLever.py, Mezzanine.py, etc.) 
 - wget, pandas (to run UCI repository examples)
 
-For models' visualization (plotting generated trees)*:
+For models' visualization (plotting generated trees):
 
-- networkx, pygraph and pygraphviz 
+- networkx, and [pygraphviz](https://pygraphviz.github.io) 
 
+These packages can be found in the main Anaconda channel or conda-forge.
 
+```console
+$ conda install numpy matplotlib wget numba tqdm wget pandas networkx ipython jupyter
+$ conda install --channel conda-forge pygraphviz 
+```
 
 ### Installing
 
