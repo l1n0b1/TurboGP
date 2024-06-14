@@ -69,6 +69,7 @@ Minor release. Changes:
 - Added scripts to run some of the examples (Keijzer 12 single population vs distributed) described in the TurboGP article (see below, in Citation).
 - Switched from Python standard math library + numba to numpy to implement some primitives definitions (for speed up).
 - Other minor changes, updates and bug fixes (see merge log for detailed info).
+- Verified support for recent Python version (>= 3.8).
 
 ### Version 1.3
 
