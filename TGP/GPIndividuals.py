@@ -50,6 +50,9 @@ class Node:
     f2_set = []
     # High level _function_ primitives (Convolutions, Poolings, matrix operations, any vector-to-vector operation.)
     f3_set = []
+    # The list of ADFs cannot be a class variable (globally defined) because they are pointers, different to each main function
+    # in Koza's original framework, or constantly changing (in cooperative coevolution or due to genetic ops).
+    #f4_set = []
 
     # I1 is the set of possible indices to address the feature vector, i.e. the set of features
     ## i1_set = []
@@ -68,10 +71,13 @@ class Node:
     # randomly, but instead they are indeed a set of numpy vectors and arrays.
     i4_set = []
 
+    # This vector defines the probability of picking a normal primitive vs picking an ADF when creating new trees, when
+    # creating intial population, or when creating new subtrees, due to subtree mutation.
+    prob_f1f4 = [0.9, 0.1]
 
 
 
-    def __init__(self, node_id, node_list, current_tree_depth, max_tree_depth, i1_set, parent_type, high_depth_allocation=.0, grow_method='full', force_type='None'):
+    def __init__(self, node_id, node_list, current_tree_depth, max_tree_depth, i1_set, parent_type, high_depth_allocation=.0, grow_method='full', force_type='None', f4_set=None):
         '''Constructor of node class
         Recieves as input a node id, for the node being created; a node list, of the nodes that comprise its tree;
         the current tree depth, at which this node is; and the max allowable tree depth (this is necessary for
@@ -87,6 +93,7 @@ class Node:
         self.max_tree_depth = max_tree_depth
         self.grow_method = grow_method
         self.i1_set = i1_set
+        self.f4_set = f4_set
         self.parent_type = parent_type
         self.high_depth_allocation = high_depth_allocation
 
@@ -120,6 +127,9 @@ class Node:
         if  self.node_type in ('f1', 'f2', 'f3'):
             # If internal node
             self.number_of_inputs = len(signature(globals()[self.function]).parameters)
+        elif self.node_type == 'f4':
+            # If ADF, get arity from calculating the len of the i1 set of the tree that defines the ADF
+            self.number_of_inputs = len(self.f4_set[self.function].i1_set)
         else:
             # If leaf (terminal) node
             self.number_of_inputs = 0
@@ -127,7 +137,10 @@ class Node:
 
     def __repr__(self):
         '''Allows to print a meaninful text representation of the instance'''
-        return '({}, {}, {})'.format(self.node_id, self.function, self.children_id)
+        if self.node_type == 'f4':
+            return '({}, ADF{}, {})'.format(self.node_id, self.function, self.children_id)
+        else:
+            return '({}, {}, {})'.format(self.node_id, self.function, self.children_id)
 
 
 
@@ -141,6 +154,7 @@ class Node:
                                        current_tree_depth=self.current_tree_depth+1,
                                        max_tree_depth=self.max_tree_depth,
                                        i1_set=self.i1_set,
+                                       f4_set=self.f4_set,
                                        parent_type=self.node_type,
                                        high_depth_allocation=self.high_depth_allocation,
                                        grow_method=self.grow_method))
@@ -222,17 +236,23 @@ class Node:
                     self.node_type = 'f3'
                 else:
                     # scalar receiving parent
-                    if Node.f2_set == None:
-                        # If only low-level GP (no Mezzanine functions that allow transition to high level primitives)
-                        # then force f1 type (low level primitives)
-                        self.node_type = 'f1'
-                    else:
-                        # Meet the minimum allocation space in the tree for low level-only primitives.
-                        if (current_tree_depth) < (max_low_depth):
-                            self.node_type = 'f1'
+                    # If Mezzanine functions defined and reaching threshold of low level functions-only allowance, consider Mezzanine functions
+                    if Node.f2_set and ((current_tree_depth) >= (max_low_depth)):
+                        # if ADFs enabled, bias selection towards std primitives but consider ADFs as well
+                        if self.f4_set:
+                            self.node_type = np.random.choice(a=['f1', 'f2', 'f4'], p=[0.15, 0.7, 0.15])
                         else:
-                            # After reaching threshold of low level functions-only allowance, consider Mezzanine functions
-                            self.node_type = np.random.choice(a=['f1', 'f2'], p=[0.2, 0.8])
+                            # if no ADFs defined, consider only std primitives and Mezzanine
+                            self.node_type = np.random.choice(a=['f1', 'f2'], p=[0.2, 0.8])                       
+                    else:
+                        # Otherwise (no Mezzanine functions or minimum low level-only depth not reached yet)
+                        # then consider only f1/f4 type (low level primitives/ADFs)
+                        if self.f4_set:
+                            # if ADFs enabled, bias selection towards std primitives
+                            self.node_type = np.random.choice(a=['f1', 'f4'], p=self.prob_f1f4)
+                        else:
+                            # if no ADFs defined, node type std primitive
+                            self.node_type = 'f1'
                 # This should be done with dicts or string comprehensions
                 if self.node_type == 'f1':
                     self.function = np.random.choice(a=Node.f1_set)
@@ -240,12 +260,14 @@ class Node:
                     self.function = np.random.choice(a=Node.f2_set)
                 if self.node_type == 'f3':
                     self.function = np.random.choice(a=Node.f3_set)
+                if self.node_type == 'f4':
+                    self.function = np.random.choice(len(self.f4_set))
 
 
             # if we reached max tree depth, pick a zero-argument function, i.e. input or constant
             else:
                 # check what type of inputs/features or constant this node needs convert to, scalar or tensorial
-                if self.parent_type == 'f1':
+                if self.parent_type in ('f1', 'f4'):
                     # scalar receiving parent
                     self.node_type=np.random.choice(a=['i1', 'i2'], p=[0.8, 0.2])
                 if self.parent_type == 'f2':
@@ -289,13 +311,16 @@ class Node:
             params = []
             for child in self.children_id:
                 params.append(self.node_list[child].evaluate(features))
-            return globals()[self.function](*params)
+            if self.node_type == 'f4':
+                return self.f4_set[self.function].evaluate(params)
+            else:
+                return globals()[self.function](*params)
 
 
 class Tree:
     'common base class for all trees'
 
-    def __init__(self, max_tree_depth, i1_set, grow_method='variable', high_depth_allocation=.0, force_root='None'):
+    def __init__(self, max_tree_depth, i1_set, grow_method='variable', high_depth_allocation=.0, force_root='None', f4_set=None):
         '''
         The constructor simply allocates a reference to an empty list that can be used to build a tree.
         It does not automatically builds a random tree, since the empty list could be used to generate a tree
@@ -314,8 +339,33 @@ class Tree:
         self.i1_set = i1_set
         self.high_depth_allocation = high_depth_allocation
         # Empty node list to represent the tree
+        self.f4_set = f4_set
         self.nodes = []
 
+    def update_f4_set(self, f4_set):
+        '''Updates pointer list to available ADF functions'''
+
+        self.f4_set = f4_set
+        for node in self.nodes:
+            node.f4_set=self.f4_set
+    
+    def count_nodes_type(self):
+        '''Counts the total number of nodes in the tree. It also returns node counts per type'''
+        total = {'f1': 0,
+                 'f2': 0,
+                 'f3': 0,
+                 'f4': 0,
+                 'i1': 0,
+                 'i2': 0,
+                 'i3': 0,
+                 'i4': 0,
+                 'total':0}
+        
+        for node in self.nodes:
+            total[node.node_type] += 1
+            total['total'] += 1
+
+        return total
 
     def refresh_node_list(self):
         '''This function is used when the tree is the result of a genetic operator (instead of random grow).
@@ -332,7 +382,7 @@ class Tree:
         limitations in the way elements are added to lists in python, we have to use this supervisor function.
         '''
         # Create the root node
-        self.nodes.append(Node(node_id=0,node_list=self.nodes,current_tree_depth=real_depth,max_tree_depth=self.max_tree_depth,i1_set=self.i1_set, parent_type=parent_type, high_depth_allocation=self.high_depth_allocation, grow_method=self.grow_method, force_type=self.root_type))
+        self.nodes.append(Node(node_id=0,node_list=self.nodes,current_tree_depth=real_depth,max_tree_depth=self.max_tree_depth,i1_set=self.i1_set, parent_type=parent_type, high_depth_allocation=self.high_depth_allocation, grow_method=self.grow_method, force_type=self.root_type, f4_set=self.f4_set))
         # Create children of the root node
         children = self.nodes[0].spring()
         # Recursively create the rest of the nodes

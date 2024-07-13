@@ -38,6 +38,7 @@ def fastNodeCopy(node):
              current_tree_depth = node.current_tree_depth,
              max_tree_depth = node.max_tree_depth,
              i1_set = node.i1_set,
+             f4_set = node.f4_set, ## it is not only not necessary (due gen ops calling tree.update_f4_set) but also wrong, as connections should not be inherited
              parent_type = node.parent_type,
              high_depth_allocation = node.high_depth_allocation,
              grow_method = node.grow_method,
@@ -201,7 +202,7 @@ def point_mutation(tree, node):
     new_tree.update_subtree_depth(new_tree.nodes[0])
 
     if new_tree.nodes[node].node_type == 'f1':
-        # Mutate to an number-of-inputs-compatible primitive
+        # Mutate to a number-of-inputs-compatible primitive
         candidate_function_inputs = 0
         while candidate_function_inputs != new_tree.nodes[node].number_of_inputs:
             candidate_function = np.random.choice(a=Node.f1_set)
@@ -214,12 +215,32 @@ def point_mutation(tree, node):
         new_tree.nodes[node].function = candidate_function
 
     if new_tree.nodes[node].node_type == 'f3':
-        # Mutate to an number-of-inputs-compatible primitive
+        # Mutate to a number-of-inputs-compatible primitive
         candidate_function_inputs = 0
         while candidate_function_inputs != new_tree.nodes[node].number_of_inputs:
             candidate_function = np.random.choice(a=Node.f3_set)
             candidate_function_inputs = len(signature(globals()[candidate_function]).parameters)
         new_tree.nodes[node].function = candidate_function
+    
+    if new_tree.nodes[node].node_type == 'f4':
+        # Mutate to a number-of-inputs-compatible ADF... 
+        # Multiple ADFs with the same arity are rarely defined, so this most likely will result in a
+        # non-mutated offspring. On the other hand, point mutation is rarely used on its own nowadays; 
+        # it is mostly used when (protected) subtree mutation picks a leaf node at the max depth, 
+        # but ADFs cannot be leaf nodes, so there is zero chance of picking an ADF for point mutation
+        # unless point_mutation is used on its own (which normally isn't as already stated). This is
+        # also the reason why f4 (ADFs) are not included above, when an f1 is selected for point mut.
+        # The inverse option would be to allow an f4 to mutate into an arity-compatible f1 primitive,
+        # but this is unlikely to be desired, as there is an intent to preserve ADFs, and besides,
+        # regular f1 primitives are typically binary or unary, and ADF are meant to got more input
+        # parameters than that, and then again, point mutation is rarely used independently anymore.
+        
+        candidate_function_inputs = 0
+        while candidate_function_inputs != tree.nodes[node].number_of_inputs:
+            candidate_function = np.random.choice(len(tree.f4_set))
+            candidate_function_inputs = len(tree.f4_set[candidate_function].i1_set)
+        new_tree.nodes[node].function = candidate_function
+        # Remember to update ADF links in wrapper op
 
     if new_tree.nodes[node].node_type == 'i1' or new_tree.nodes[node].node_type == 'i2':
         # Mutate to scalar inputs/features or constants
@@ -270,7 +291,7 @@ def subtree_mutation(tree,node):
     # shall generate an entirely new tree unrelated to the parent tree.
     if node == 0:
 
-        result = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation)
+        result = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, f4_set=tree.f4_set)
         result.grow_random_tree()
         return result
 
@@ -281,20 +302,20 @@ def subtree_mutation(tree,node):
 
     # If No Mezzanine functions defined, then allow only low level root type
     if not Node.f2_set:
-        subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root='None')
+        subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root='None', f4_set=tree.f4_set)
     else:
         # Otherwise, allow other types of nodes
         if tree.nodes[node].node_type == 'f2':
             # if Mezzanine, then root node might be either low level or mezzanine
             root_type = np.random.choice(a=['None', 'f2'])
-            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root=root_type)
+            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root=root_type, f4_set=tree.f4_set)
         elif tree.nodes[node].node_type == 'f3' or tree.nodes[node].node_type == 'i3' or tree.nodes[node].node_type == 'i4':
             # if High Level or Array input/const, then root node has to be high Level
-            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root='f3')
+            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root='f3', f4_set=tree.f4_set)
         else:
             # if Low level function or scalar input/constant, then root can be low level or mezzanine too:
             root_type = np.random.choice(a=['None', 'f2'])
-            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root=root_type)
+            subtree = Tree(tree.max_tree_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, force_root=root_type, f4_set=tree.f4_set)
 
     subtree.grow_random_tree(real_depth = tree.nodes[node].current_tree_depth, parent_type = tree.nodes[node].parent_type)
 
@@ -354,7 +375,7 @@ def function_composition(tree, g_depth, grow_method='variable'):
     # point are still not implemented.
 
     # Create new random tree that represents function g
-    g = Tree(g_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation)
+    g = Tree(g_depth, tree.i1_set, grow_method='variable', high_depth_allocation=tree.high_depth_allocation, f4_set=tree.f4_set)
     g.grow_random_tree()
 
     # Pick some random point for insertion (read TODO)
