@@ -99,10 +99,6 @@ class Regressor1ADF(SimpleRegresor):
         super().fitness(samples_matrix, labels_matrix)
         # count number of nodes in main tree
         main_node_count = self.trees[0].count_nodes_type()
-        # count number of nodes in ADF
-        adf_node_count = self.trees[1].count_nodes_type()
-        # count total number of nodes in individual and store it in a member method
-        self.total_node_count = main_node_count['total'] + adf_node_count['total']
 
         # if use of ADF is mandatory
         if self.force_adf:
@@ -111,6 +107,18 @@ class Regressor1ADF(SimpleRegresor):
         # This is a simple mechanism to ensure crossover and mutations do not erase ADFs from the population.
 
         return self.fitness_value
+
+    def cost(self):
+        ''' This method return the number of nodes in the individual.'''
+
+        # count number of nodes in main tree
+        main_node_count = self.trees[0].count_nodes_type()
+        # count number of nodes in ADF
+        adf_node_count = self.trees[1].count_nodes_type()
+        # count total number of nodes in individual and store it in a member method
+        total_node_count = main_node_count['total'] + main_node_count['f4']*adf_node_count['total']
+
+        return total_node_count
 
     @staticmethod
     def mutation(filter1):

@@ -125,6 +125,12 @@ class SimpleRegresor:
 
         return testing_fitness
 
+    def cost(self):
+        ''' This method return the number of nodes in the individual.'''
+
+        node_counts = self.tree.count_nodes_type()
+        return node_counts['total']
+
     @staticmethod
     def crossover(filter1, filter2):
         ''' This is a static method of the SimpleRegressor class that defines standard subtree crossover operation for
